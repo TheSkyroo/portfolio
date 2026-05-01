@@ -1,205 +1,233 @@
-import React, { useEffect, useRef } from 'react';
-import Matter from 'matter-js';
+import { useEffect, useRef, useState } from "react";
+import Matter from "matter-js";
 
-interface TagProps {
+interface TagConfig {
   label: string;
-  isActive?: boolean;
-  isProfile?: boolean;
-  imageUrl?: string;
+  hasStatusDot?: boolean;
 }
 
-const TAG_DATA: TagProps[] = [
-  { label: 'Web developer' },
-  { label: '2+ Years Exp' },
-  { label: 'Next.js' },
-  { label: 'React.js' },
-  { label: 'Full Stack' },
-  { label: 'GDG marketing lead', isActive: true },
-  { label: '', isProfile: true, imageUrl: 'https://i.pravatar.cc/150?u=ishant' },
+const TAGS: TagConfig[] = [
+  { label: "Web Developer" },
+  { label: "2+ Years Exp" },
+  { label: "Next.js" },
+  { label: "React.js" },
+  { label: "Full Stack" },
+  { label: "GDG Marketing Lead", hasStatusDot: true },
 ];
 
-interface PhysicsTagsProps {
-  nameBoundsRef: React.RefObject<HTMLHeadingElement | null>;
+/* ── Helpers ────────────────────────────────────────── */
+
+/** Measure how wide a tag pill will be once rendered. */
+function measureTag(label: string, hasStatusDot: boolean): { w: number; h: number } {
+  const span = document.createElement("span");
+  span.style.cssText = `
+    position:absolute;visibility:hidden;white-space:nowrap;
+    font-family:"IBM Plex Mono",monospace;font-size:18px;
+    letter-spacing:-0.04em;padding:0 32px;
+  `;
+  span.textContent = label;
+  if (hasStatusDot) {
+    // add space for the dot + gap
+    span.textContent += "   •";
+  }
+  document.body.appendChild(span);
+  const w = span.offsetWidth + 8; // small buffer
+  document.body.removeChild(span);
+  const h = 52;
+  return { w: Math.max(w, 100), h };
 }
 
-const PhysicsTags: React.FC<PhysicsTagsProps> = ({ nameBoundsRef }) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const tagsRef = useRef<(HTMLDivElement | null)[]>([]);
+/* ── Component ──────────────────────────────────────── */
+
+const PhysicsTags = () => {
+  const sceneRef = useRef<HTMLDivElement>(null);
+  const engineRef = useRef<Matter.Engine | null>(null);
+  const renderRef = useRef<Matter.Render | null>(null);
+  const runnerRef = useRef<Matter.Runner | null>(null);
+  const [tagBodies, setTagBodies] = useState<
+    { body: Matter.Body; tag: TagConfig; w: number; h: number }[]
+  >([]);
+  const animFrameRef = useRef<number>(0);
 
   useEffect(() => {
-    if (!containerRef.current || !canvasRef.current) return;
+    const container = sceneRef.current;
+    if (!container) return;
 
-    const { Engine, Render, Runner, World, Bodies, Mouse, MouseConstraint } = Matter;
+    const { Engine, Render, Runner, Bodies, Composite, Mouse, MouseConstraint, Events } = Matter;
 
-    const engine = Engine.create();
-    engine.gravity.y = 0.5; // Slightly lower gravity for "floaty" feel
+    const width = container.offsetWidth;
+    const height = container.offsetHeight;
 
+    // Create engine
+    const engine = Engine.create({
+      gravity: { x: 0, y: 1.8, scale: 0.001 },
+    });
+    engineRef.current = engine;
+
+    // Create renderer (invisible – we render with DOM)
     const render = Render.create({
-      element: containerRef.current,
-      canvas: canvasRef.current,
-      engine: engine,
+      element: container,
+      engine,
       options: {
-        width: window.innerWidth,
-        height: window.innerHeight,
+        width,
+        height,
         wireframes: false,
-        background: 'transparent',
+        background: "transparent",
+        pixelRatio: window.devicePixelRatio,
+      },
+    });
+    renderRef.current = render;
+
+    // Hide the canvas – we draw our own DOM tags
+    render.canvas.style.position = "absolute";
+    render.canvas.style.top = "0";
+    render.canvas.style.left = "0";
+    render.canvas.style.pointerEvents = "none";
+    render.canvas.style.opacity = "0";
+
+    // Walls
+    const wallThickness = 60;
+    const floorY = height - 34; // floor sits slightly above the bottom, leaving a gap before the name
+
+    const floor = Bodies.rectangle(width / 2, floorY + wallThickness / 2, width * 2, wallThickness, {
+      isStatic: true,
+      friction: 0.8,
+      restitution: 0.15,
+      render: { visible: false },
+    });
+
+    const leftWall = Bodies.rectangle(-wallThickness / 2, height / 2, wallThickness, height * 3, {
+      isStatic: true,
+      render: { visible: false },
+    });
+
+    const rightWall = Bodies.rectangle(width + wallThickness / 2, height / 2, wallThickness, height * 3, {
+      isStatic: true,
+      render: { visible: false },
+    });
+
+    Composite.add(engine.world, [floor, leftWall, rightWall]);
+
+    // Create tag bodies
+    const createdBodies: { body: Matter.Body; tag: TagConfig; w: number; h: number }[] = [];
+
+    TAGS.forEach((tag, i) => {
+      const { w, h } = measureTag(tag.label, !!tag.hasStatusDot);
+
+      // Spread tags across the width, start above the visible area
+      const x = (width / (TAGS.length + 1)) * (i + 1) + (Math.random() - 0.5) * 40;
+      const y = -80 - i * 70; // stagger vertically above viewport
+
+      const body = Bodies.rectangle(x, y, w, h, {
+        chamfer: { radius: h / 2 }, // pill shape
+        restitution: 0.25,
+        friction: 0.4,
+        frictionAir: 0.02,
+        density: 0.002,
+        render: { visible: false },
+      });
+
+      createdBodies.push({ body, tag, w, h });
+      Composite.add(engine.world, body);
+    });
+
+    setTagBodies(createdBodies);
+
+    // Mouse drag
+    const mouse = Mouse.create(container);
+    // Prevent page scroll when dragging inside the physics area
+    mouse.element.removeEventListener("mousewheel", (mouse as any).mousewheel);
+    mouse.element.removeEventListener("DOMMouseScroll", (mouse as any).mousewheel);
+
+    const mouseConstraint = MouseConstraint.create(engine, {
+      mouse,
+      constraint: {
+        stiffness: 0.6,
+        damping: 0.15,
+        render: { visible: false },
       },
     });
 
+    Composite.add(engine.world, mouseConstraint);
+
+    // Keep mouse in sync with render
+    render.mouse = mouse;
+
+    // Run
     const runner = Runner.create();
+    runnerRef.current = runner;
     Runner.run(runner, engine);
+    Render.run(render);
 
-    const width = window.innerWidth;
-    const height = window.innerHeight;
-
-    // Boundaries
-    const ground = Bodies.rectangle(width / 2, height + 50, width, 100, { isStatic: true });
-    const leftWall = Bodies.rectangle(-50, height / 2, 100, height, { isStatic: true });
-    const rightWall = Bodies.rectangle(width + 50, height / 2, 100, height, { isStatic: true });
-    const ceiling = Bodies.rectangle(width / 2, -1000, width, 100, { isStatic: true });
-
-    World.add(engine.world, [ground, leftWall, rightWall, ceiling]);
-
-    let nameBody: Matter.Body | null = null;
-
-    const updateNameBody = () => {
-      if (nameBoundsRef.current) {
-        const rect = nameBoundsRef.current.getBoundingClientRect();
-        if (nameBody) World.remove(engine.world, nameBody);
-        
-        // Create a static body for the large text name
-        nameBody = Bodies.rectangle(
-          rect.left + rect.width / 2,
-          rect.top + rect.height / 2,
-          rect.width,
-          rect.height,
-          { 
-            isStatic: true, 
-            chamfer: { radius: 20 },
-            render: { visible: false }
-          }
-        );
-        World.add(engine.world, nameBody);
-      }
+    // Sync DOM tags to physics bodies
+    const syncDOM = () => {
+      setTagBodies((prev) => [...prev]); // trigger re-render
+      animFrameRef.current = requestAnimationFrame(syncDOM);
     };
+    animFrameRef.current = requestAnimationFrame(syncDOM);
 
-    updateNameBody();
-
-    // Create Tag Bodies
-    const bodies: Matter.Body[] = [];
-    TAG_DATA.forEach((tag) => {
-      const x = (Math.random() * 0.6 + 0.2) * width; // Center-ish horizontal scatter
-      const y = -Math.random() * 800; // Drop from higher up
-      
-      let body;
-      if (tag.isProfile) {
-        body = Bodies.circle(x, y, 35, { 
-          restitution: 0.7,
-          friction: 0.1,
-          frictionAir: 0.02,
-          slop: 0.5
-        });
-      } else {
-        const w = tag.label.length * 9 + 45;
-        const h = 45;
-        body = Bodies.rectangle(x, y, w, h, { 
-          restitution: 0.7,
-          friction: 0.1,
-          frictionAir: 0.02,
-          chamfer: { radius: 22 },
-          angle: (Math.random() - 0.5) * 1
-        });
-      }
-      bodies.push(body);
+    // Cursor feedback when hovering/dragging
+    Events.on(mouseConstraint, "startdrag", () => {
+      container.style.cursor = "grabbing";
+    });
+    Events.on(mouseConstraint, "enddrag", () => {
+      container.style.cursor = "grab";
     });
 
-    World.add(engine.world, bodies);
-
-    // Mouse Interaction
-    const mouse = Mouse.create(canvasRef.current);
-    const mouseConstraint = MouseConstraint.create(engine, {
-      mouse: mouse,
-      constraint: {
-        stiffness: 0.15,
-        render: { visible: false }
-      }
-    });
-    World.add(engine.world, mouseConstraint);
-
-    // Disable scrolling interference
-    (mouse as any).element.removeEventListener("mousewheel", (mouse as any).mousewheel);
-    (mouse as any).element.removeEventListener("DOMMouseScroll", (mouse as any).mousewheel);
-
-    // Sync Loop
-    const update = () => {
-      bodies.forEach((body, i) => {
-        const element = tagsRef.current[i];
-        if (element) {
-          const { x, y } = body.position;
-          const angle = body.angle;
-          element.style.transform = `translate(${x}px, ${y}px) rotate(${angle}rad)`;
-          element.style.top = '0px';
-          element.style.left = '0px';
-          element.style.position = 'absolute';
-          element.style.marginTop = `-${element.offsetHeight / 2}px`;
-          element.style.marginLeft = `-${element.offsetWidth / 2}px`;
-        }
-      });
-      requestAnimationFrame(update);
-    };
-    update();
-
+    // Handle resize
     const handleResize = () => {
-      render.canvas.width = window.innerWidth;
-      render.canvas.height = window.innerHeight;
-      updateNameBody();
+      const newW = container.offsetWidth;
+      const newH = container.offsetHeight;
+
+      render.canvas.width = newW;
+      render.canvas.height = newH;
+      render.options.width = newW;
+      render.options.height = newH;
+
+      // Move floor
+      Matter.Body.setPosition(floor, {
+        x: newW / 2,
+        y: newH - 2 + wallThickness / 2,
+      });
+
+      // Move walls
+      Matter.Body.setPosition(leftWall, { x: -wallThickness / 2, y: newH / 2 });
+      Matter.Body.setPosition(rightWall, { x: newW + wallThickness / 2, y: newH / 2 });
     };
 
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
 
     return () => {
-      window.removeEventListener('resize', handleResize);
-      Engine.clear(engine);
+      cancelAnimationFrame(animFrameRef.current);
+      window.removeEventListener("resize", handleResize);
       Render.stop(render);
       Runner.stop(runner);
-      World.clear(engine.world, false);
+      Engine.clear(engine);
+      render.canvas.remove();
+      render.textures = {};
     };
-  }, [nameBoundsRef]);
+  }, []);
 
   return (
-    <div ref={containerRef} className="relative w-full h-full pointer-events-auto">
-      {/* Invisible Canvas for Physics Interaction */}
-      <canvas ref={canvasRef} className="absolute inset-0 cursor-grab active:cursor-grabbing opacity-0 z-30" />
-      
-      {/* Visual Tags */}
-      <div className="absolute inset-0 pointer-events-none z-20">
-        {TAG_DATA.map((tag, i) => (
-          <div
-            key={i}
-            ref={(el) => { tagsRef.current[i] = el; }}
-            className={`
-              flex items-center justify-center whitespace-nowrap
-              ${tag.isProfile ? 'w-16 h-16 md:w-20 md:h-20 rounded-full' : 'px-6 py-2.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-lg'}
-              shadow-[0_8px_32px_rgba(0,0,0,0.3)]
-              text-[10px] md:text-xs font-bold tracking-widest uppercase text-white/80 transition-opacity duration-700
-            `}
-          >
-            {tag.isProfile ? (
-              <img 
-                src={tag.imageUrl} 
-                alt="Profile" 
-                className="w-full h-full rounded-full border-2 border-purple-500/40 object-cover shadow-[0_0_30px_rgba(168,85,247,0.3)]"
-              />
-            ) : (
-              <div className="flex items-center gap-3">
-                {tag.isActive && <span className="w-2 h-2 rounded-full bg-purple-500 shadow-[0_0_12px_rgba(168,85,247,1)]" />}
-                {tag.label}
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
+    <div
+      ref={sceneRef}
+      className="physics-tags-container"
+      style={{ cursor: "grab" }}
+    >
+      {tagBodies.map(({ body, tag, w, h }) => (
+        <div
+          key={tag.label}
+          className="physics-tag"
+          style={{
+            width: w,
+            height: h,
+            transform: `translate(${body.position.x - w / 2}px, ${body.position.y - h / 2}px) rotate(${body.angle}rad)`,
+          }}
+        >
+          <span>{tag.label}</span>
+          {tag.hasStatusDot && <span className="physics-tag__dot" />}
+        </div>
+      ))}
     </div>
   );
 };
