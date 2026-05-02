@@ -41,7 +41,7 @@ const INITIAL_MESSAGES: ChatMessage[] = [
     id: "intro",
     role: "assistant",
     content:
-      "Hey, I'm Ishant. Ask me about a project, my stack, or how I build.",
+      "Hey, I'm Ishant. Ask me about my project, my stack, or how I build.",
   },
 ];
 
