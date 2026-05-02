@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { CornerDownRight, ArrowUpRight } from "lucide-react";
-import { RiChat1Fill } from "react-icons/ri";
 import gsap from "gsap";
+import PortfolioChat from "./components/PortfolioChat";
 import PhysicsTags from "./components/PhysicsTags";
 import "./App.css";
 
@@ -64,9 +64,7 @@ const App = () => {
   return (
     <main ref={rootRef} className="portfolio-page">
       <div className="page-noise" aria-hidden="true" />
-      <button type="button" className="chat-fab" aria-label="Open chat">
-        <RiChat1Fill />
-      </button>
+      <PortfolioChat />
 
       <header className="hero-header">
         <div className="hero-intro">

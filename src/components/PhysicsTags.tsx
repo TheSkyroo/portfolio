@@ -2,7 +2,10 @@ import { useEffect, useRef, useState } from "react";
 import Matter from "matter-js";
 
 import { ArrowDown, Asterisk } from "lucide-react";
-import heroImg from "../assets/hero.png";
+
+import crownImg from "../assets/crown.jpg";
+import headphoneImg from "../assets/headphone.jpg";
+
 
 type TagType = "text" | "icon" | "image";
 
@@ -21,7 +24,8 @@ const TAGS: TagConfig[] = [
     icon: <ArrowDown size={57} strokeWidth={3} color="#090909" />,
   },
   { type: "text", label: "2+ Years Exp" },
-  { type: "image", imageSrc: heroImg },
+  { type: "image", imageSrc: headphoneImg },
+  { type: "image", imageSrc: crownImg },
   { type: "text", label: "Next.js" },
   {
     type: "icon",
