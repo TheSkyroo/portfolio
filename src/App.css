@@ -44,7 +44,7 @@
   position: fixed;
   right: 1.25rem;
   bottom: 1.25rem;
-  z-index: 2147483647;
+  z-index: 9999;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -687,13 +687,31 @@
     gap: 0.7rem;
   }
 
+  .hero-intro__text {
+    font-size: clamp(1.3rem, 5.5vw, 1.8rem);
+  }
+
   .intro-mark {
     width: 1.8rem;
     height: 1.8rem;
   }
 
   .hero-stage {
-    height: clamp(16rem, 45vw, 22rem);
+    height: clamp(14rem, 40vw, 20rem);
+    margin-top: 1rem;
+  }
+
+  .hero-name__text {
+    font-size: clamp(3.5rem, 18vw, 6.5rem);
+    line-height: 0.82;
+  }
+
+  .hero-name__code {
+    font-size: clamp(1.2rem, 4.5vw, 1.8rem);
+  }
+
+  .hero-name__quotes {
+    font-size: clamp(2.5rem, 10vw, 4rem);
   }
 
   .snapshot-section {
@@ -738,5 +756,40 @@
 
   .feature-bento {
     grid-column: auto;
+  }
+}
+
+@media (max-width: 400px) {
+  .portfolio-page {
+    padding: 0.85rem 0.85rem 1.25rem;
+  }
+
+  .hero-header {
+    gap: 1rem;
+  }
+
+  .hero-intro__text {
+    font-size: 1.25rem;
+  }
+
+  .resume-pill {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9rem;
+  }
+
+  .hero-name__text {
+    font-size: clamp(3rem, 16vw, 4.5rem);
+  }
+
+  .hero-stage {
+    height: 12rem;
+  }
+
+  .snapshot-section__headline p {
+    font-size: 1.5rem;
+  }
+
+  .snapshot-section__copy p {
+    font-size: 0.95rem;
   }
 }

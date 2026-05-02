@@ -64,13 +64,19 @@ const Footer = ({ className }: { className?: string }) => {
       </button>
 
       <div className="mt-16 flex flex-wrap items-center justify-center gap-4 sm:gap-6">
-        {["LinkedIn", "Github", "Instagram"].map((platform) => (
+        {[
+          { name: "LinkedIn", url: "https://www.linkedin.com/in/ishant-sinha-912227292?utm_source=share_via&utm_content=profile&utm_medium=member_ios" },
+          { name: "Github", url: "https://github.com/TheSkyroo" },
+          { name: "Instagram", url: "https://www.instagram.com/the.ishannt?igsh=MW9xcnoxdnQzaWxwMg%3D%3D&utm_source=qr" }
+        ].map((platform) => (
           <a
-            key={platform}
-            href="#"
+            key={platform.name}
+            href={platform.url}
+            target="_blank"
+            rel="noopener noreferrer"
             className="rounded-full border border-white/15 px-6 py-2 text-sm font-medium text-white/80 transition-colors hover:bg-white/10 hover:text-white"
           >
-            {platform}
+            {platform.name}
           </a>
         ))}
       </div>

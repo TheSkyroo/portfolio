@@ -84,10 +84,15 @@ const BentoGrid = () => {
             eyebrow="Deep Build"
             variant="text"
           >
-            <div className="inline-flex items-center gap-3 rounded-full border border-white/18 bg-white/10 px-4 py-2 text-sm font-medium text-white">
+            <a 
+              href="https://reader-s-robin.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-3 rounded-full border border-white/18 bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/20"
+            >
               Visit Site
               <ArrowUpRight size={18} strokeWidth={1.8} />
-            </div>
+            </a>
           </BentoCard>
         </BentoTilt>
 
@@ -99,10 +104,15 @@ const BentoGrid = () => {
             eyebrow="Realtime"
             variant="text"
           >
-            <div className="inline-flex items-center gap-3 rounded-full border border-white/18 bg-white/10 px-4 py-2 text-sm font-medium text-white">
+            <a 
+              href="https://streamify-pvt-1.onrender.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-3 rounded-full border border-white/18 bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/20"
+            >
               Visit Site
               <ArrowUpRight size={18} strokeWidth={1.8} />
-            </div>
+            </a>
           </BentoCard>
         </BentoTilt>
 
@@ -114,10 +124,15 @@ const BentoGrid = () => {
             eyebrow="Scale"
             variant="text"
           >
-            <div className="inline-flex items-center gap-3 rounded-full border border-white/18 bg-white/10 px-4 py-2 text-sm font-medium text-white">
+            <a 
+              href="https://college-connection.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-3 rounded-full border border-white/18 bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/20"
+            >
               Visit Site
               <ArrowUpRight size={18} strokeWidth={1.8} />
-            </div>
+            </a>
           </BentoCard>
         </BentoTilt>
 
@@ -129,10 +144,15 @@ const BentoGrid = () => {
             eyebrow="Visual Pass"
             variant="full"
           >
-            <div className="inline-flex items-center gap-3 rounded-full border border-white/18 bg-white/10 px-4 py-2 text-sm font-medium text-white">
+            <a 
+              href="https://fahhhhhhhh.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-3 rounded-full border border-white/18 bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/20"
+            >
               Visit Site
               <ArrowUpRight size={18} strokeWidth={1.8} />
-            </div>
+            </a>
           </BentoCard>
         </BentoTilt>
       </div>

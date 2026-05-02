@@ -38,22 +38,32 @@ const TAGS: TagConfig[] = [
 
 /** Measure how wide a tag pill will be once rendered. */
 function measureTag(label: string, hasStatusDot: boolean): { w: number; h: number } {
+  const width = window.innerWidth;
+  const isSmall = width < 560;
+  const isVerySmall = width < 400;
+
+  // Match the CSS clamp(1.725rem, 2.55vw, 2.07rem)
+  // 1.725rem = 27.6px, 2.07rem = 33.12px
+  let fontSize = 33;
+  if (isSmall) fontSize = 27.6;
+  if (isVerySmall) fontSize = 24;
+
   const span = document.createElement("span");
   span.style.cssText = `
     position:absolute;visibility:hidden;white-space:nowrap;
-    font-family:"IBM Plex Mono",monospace;font-size:33px;
-    letter-spacing:-0.04em;padding:0 60px;
+    font-family:"IBM Plex Mono",monospace;font-size:${fontSize}px;
+    letter-spacing:-0.04em;padding:0 ${isSmall ? "40px" : "60px"};
   `;
   span.textContent = label;
   if (hasStatusDot) {
-    // add space for the dot + gap
     span.textContent += "   •";
   }
   document.body.appendChild(span);
-  const w = span.offsetWidth + 8; // small buffer
+  const w = span.offsetWidth + (isSmall ? 4 : 8); 
   document.body.removeChild(span);
-  const h = 93;
-  return { w: Math.max(w, 100), h };
+  
+  const h = isVerySmall ? 70 : isSmall ? 80 : 93;
+  return { w: Math.max(w, isVerySmall ? 80 : 100), h };
 }
 
 /* ── Component ──────────────────────────────────────── */
