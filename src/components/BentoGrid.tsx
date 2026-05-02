@@ -5,11 +5,6 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import BentoCard from "./BentoCard";
 import BentoTilt from "./BentoTilt";
 
-import connectionsPoster from "../assets/connections.png";
-import labPoster from "../assets/fahhhh.png";
-import readersRobinPoster from "../assets/readers robin.png";
-import streamifyPoster from "../assets/streamify.png";
-
 gsap.registerPlugin(ScrollTrigger);
 
 const BentoGrid = () => {
@@ -71,12 +66,17 @@ const BentoGrid = () => {
   }, []);
 
   return (
-    <section className="feature-bento" aria-label="Selected work">
+    <section className="feature-bento mb-20" aria-label="Selected Projects">
+      <div className="mb-10 lg:mb-14">
+        <h2 className="font-display text-4xl mt-20 mb-20 font-medium tracking-tighter text-white sm:text-5xl lg:text-6xl">
+          <span className="text-white/40"> Selected</span> Projects
+        </h2>
+      </div>
       <div
         ref={gridRef}
-        className="grid h-auto w-full grid-cols-1 gap-5 sm:gap-6 lg:h-[135vh] lg:grid-cols-2 lg:grid-rows-3"
+        className="grid h-auto w-full grid-cols-1 gap-5 sm:gap-6 lg:grid-cols-2"
       >
-        <BentoTilt>
+        <BentoTilt className="min-h-[22rem] sm:min-h-[24rem]">
           <BentoCard
             src=""
             title={<>reader&apos;s robin</>}
@@ -91,7 +91,7 @@ const BentoGrid = () => {
           </BentoCard>
         </BentoTilt>
 
-        <BentoTilt>
+        <BentoTilt className="min-h-[22rem] sm:min-h-[24rem]">
           <BentoCard
             src=""
             title={<>streamify</>}
@@ -106,8 +106,7 @@ const BentoGrid = () => {
           </BentoCard>
         </BentoTilt>
 
-
- <BentoTilt>
+        <BentoTilt className="min-h-[22rem] sm:min-h-[24rem]">
           <BentoCard
             src=""
             title={<>College connection</>}
@@ -122,8 +121,7 @@ const BentoGrid = () => {
           </BentoCard>
         </BentoTilt>
 
-
- <BentoTilt>
+        <BentoTilt className="min-h-[22rem] sm:min-h-[24rem]">
           <BentoCard
             src=""
             title={<>Meme lab</>}
@@ -137,8 +135,6 @@ const BentoGrid = () => {
             </div>
           </BentoCard>
         </BentoTilt>
-        
-
       </div>
     </section>
   );

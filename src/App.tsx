@@ -5,6 +5,7 @@ import PortfolioChat from "./components/PortfolioChat";
 import PhysicsTags from "./components/PhysicsTags";
 import CustomCursor from "./components/CustomCursor";
 import FeatureBento from "./components/FeatureBento";
+import Footer from "./components/Footer";
 import "./App.css";
 
 const App = () => {
@@ -78,7 +79,7 @@ const App = () => {
       <div className="page-noise" aria-hidden="true" />
       <PortfolioChat />
 
-      <header className="hero-header">
+      <header className="hero-header mt-4">
         <div className="hero-intro">
           <span className="intro-mark" aria-hidden="true">
             <CornerDownRight size={18} strokeWidth={2} />
@@ -120,8 +121,8 @@ const App = () => {
 
         <div className="snapshot-section__headline">
           <p>
-            Hi, I&apos;m Ishant. I build clean, fast products that make complexity feel
-            simple.
+            Hi, I&apos;m Ishant. I build clean, fast products that make
+            complexity feel simple.
           </p>
         </div>
 
@@ -135,6 +136,8 @@ const App = () => {
 
         <FeatureBento />
       </section>
+
+      <Footer className="!mt-14" />
     </main>
   );
 };

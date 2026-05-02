@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import { SendHorizontal, X } from "lucide-react";
 import { RiChat1Fill } from "react-icons/ri";
-import chatPanelAvatar from "../assets/ishant.png";
+import gsap from "gsap";
+import chatPanelAvatar from "../assets/ishant.jpg";
 
 type ChatRole = "assistant" | "user";
 
@@ -22,6 +23,9 @@ interface ChatReplyResponse {
 }
 
 const SESSION_STORAGE_KEY = "ishant-portfolio-chat-session-id";
+const LAST_ACTIVITY_KEY = "ishant-portfolio-chat-last-activity";
+const EXPIRATION_MS = 15 * 60 * 1000;
+
 const DETAIL_REQUEST_PATTERN =
   /\b(expand|more detail|more details|detailed|deep dive|go deeper|elaborate|longer|full version|step by step|walk me through)\b/i;
 
@@ -49,18 +53,31 @@ function createMessage(role: ChatRole, content: string): ChatMessage {
   };
 }
 
+function updateLastActivity() {
+  if (typeof window !== "undefined") {
+    window.localStorage.setItem(LAST_ACTIVITY_KEY, Date.now().toString());
+  }
+}
+
 function getOrCreateSessionId() {
   if (typeof window === "undefined") {
     return "portfolio-chat-session";
   }
 
   const existingSessionId = window.localStorage.getItem(SESSION_STORAGE_KEY);
-  if (existingSessionId) {
-    return existingSessionId;
+  const lastActivityStr = window.localStorage.getItem(LAST_ACTIVITY_KEY);
+  const now = Date.now();
+
+  if (existingSessionId && lastActivityStr) {
+    const lastActivity = parseInt(lastActivityStr, 10);
+    if (now - lastActivity < EXPIRATION_MS) {
+      return existingSessionId;
+    }
   }
 
   const nextSessionId = crypto.randomUUID();
   window.localStorage.setItem(SESSION_STORAGE_KEY, nextSessionId);
+  window.localStorage.setItem(LAST_ACTIVITY_KEY, now.toString());
   return nextSessionId;
 }
 
@@ -182,18 +199,52 @@ function getLocalFallbackReply(prompt: string): string {
 }
 
 const PortfolioChat = () => {
-  const [sessionId] = useState(getOrCreateSessionId);
+  const [sessionId, setSessionId] = useState(getOrCreateSessionId);
   const [isOpen, setIsOpen] = useState(false);
+  const [hasOpened, setHasOpened] = useState(false);
   const [draft, setDraft] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>(INITIAL_MESSAGES);
   const [isTyping, setIsTyping] = useState(false);
   const viewportRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const highlightRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!isOpen) return;
     inputRef.current?.focus();
   }, [isOpen]);
+
+  useEffect(() => {
+    if (isOpen || hasOpened || !highlightRef.current) return;
+
+    const ctx = gsap.context(() => {
+      // Intro pop-up
+      gsap.fromTo(
+        highlightRef.current,
+        { opacity: 0, y: 20, scale: 0.9 },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.8,
+          ease: "back.out(1.5)",
+          delay: 3.5,
+        },
+      );
+
+      // Continuous float
+      gsap.to(highlightRef.current, {
+        y: -6,
+        duration: 1.8,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut",
+        delay: 4.3,
+      });
+    });
+
+    return () => ctx.revert();
+  }, [isOpen, hasOpened]);
 
   useEffect(() => {
     const viewport = viewportRef.current;
@@ -204,6 +255,24 @@ const PortfolioChat = () => {
       behavior: "smooth",
     });
   }, [isOpen, isTyping, messages]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const lastActivityStr = window.localStorage.getItem(LAST_ACTIVITY_KEY);
+      if (lastActivityStr) {
+        const lastActivity = parseInt(lastActivityStr, 10);
+        if (Date.now() - lastActivity >= EXPIRATION_MS) {
+          setMessages(INITIAL_MESSAGES);
+          const newSessionId = crypto.randomUUID();
+          window.localStorage.setItem(SESSION_STORAGE_KEY, newSessionId);
+          window.localStorage.setItem(LAST_ACTIVITY_KEY, Date.now().toString());
+          setSessionId(newSessionId);
+        }
+      }
+    }, 60000); // Check every minute
+
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     let isCancelled = false;
@@ -234,6 +303,8 @@ const PortfolioChat = () => {
   const sendMessage = async (content: string) => {
     const trimmed = content.trim();
     if (!trimmed || isTyping) return;
+
+    updateLastActivity();
 
     setMessages((current) => [...current, createMessage("user", trimmed)]);
     setDraft("");
@@ -385,16 +456,52 @@ const PortfolioChat = () => {
         </section>
       ) : null}
 
-      <button
-        type="button"
-        className="chat-fab"
-        aria-controls="portfolio-chat"
-        aria-expanded={isOpen}
-        aria-label={isOpen ? "Close chat" : "Open chat"}
-        onClick={() => setIsOpen((open) => !open)}
-      >
-        {isOpen ? <X size={24} strokeWidth={2.1} /> : <RiChat1Fill />}
-      </button>
+      <div className="relative pointer-events-auto">
+        {!isOpen && !hasOpened ? (
+          <div
+            ref={highlightRef}
+            className="absolute bottom-full right-0 mb-4 w-56 opacity-0 rounded-2xl border border-white/10 bg-zinc-950 p-4 shadow-[0_10px_40px_rgba(0,0,0,0.5)]"
+          >
+            <div className="flex items-center justify-between mb-2">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-300/25 bg-emerald-300/10 px-2 py-0.5 text-[0.65rem] font-medium uppercase tracking-widest text-emerald-200">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                Ishant.ai
+              </span>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setHasOpened(true);
+                }}
+                className="text-white/40 transition-colors hover:text-white"
+                aria-label="Dismiss"
+              >
+                <X size={14} />
+              </button>
+            </div>
+            <p className="text-sm font-medium leading-tight text-white/90">
+              Got questions?
+              <span className="block mt-1 text-xs font-normal text-white/60">
+                Ask me about my projects, stack, or experience.
+              </span>
+            </p>
+            <div className="absolute -bottom-2 right-6 h-4 w-4 rotate-45 border-b border-r border-white/10 bg-zinc-950" />
+          </div>
+        ) : null}
+
+        <button
+          type="button"
+          className="chat-fab"
+          aria-controls="portfolio-chat"
+          aria-expanded={isOpen}
+          aria-label={isOpen ? "Close chat" : "Open chat"}
+          onClick={() => {
+            setIsOpen((open) => !open);
+            setHasOpened(true);
+          }}
+        >
+          {isOpen ? <X size={24} strokeWidth={2.1} /> : <RiChat1Fill />}
+        </button>
+      </div>
     </div>
   );
 };
