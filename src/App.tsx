@@ -4,6 +4,7 @@ import gsap from "gsap";
 import PortfolioChat from "./components/PortfolioChat";
 import PhysicsTags from "./components/PhysicsTags";
 import CustomCursor from "./components/CustomCursor";
+import FeatureBento from "./components/FeatureBento";
 import "./App.css";
 
 const App = () => {
@@ -64,7 +65,7 @@ const App = () => {
             y: 42,
             duration: 0.9,
           },
-          "-=0.3",
+          "-=0.35",
         );
     }, rootRef);
 
@@ -131,6 +132,8 @@ const App = () => {
             overdesigned.
           </p>
         </div>
+
+        <FeatureBento />
       </section>
     </main>
   );

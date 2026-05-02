@@ -1,8 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import Matter from "matter-js";
 
-import { ArrowDown, Asterisk } from "lucide-react";
-
 import crownImg from "../assets/crown.jpg";
 import headphoneImg from "../assets/headphone.jpg";
 
@@ -199,9 +197,15 @@ const PhysicsTags = () => {
 
     // Mouse drag
     const mouse = Mouse.create(container);
+    const mouseWheelHandler = (
+      mouse as Matter.Mouse & { mousewheel?: (event: Event) => void }
+    ).mousewheel;
+
     // Prevent page scroll when dragging inside the physics area
-    mouse.element.removeEventListener("mousewheel", (mouse as any).mousewheel);
-    mouse.element.removeEventListener("DOMMouseScroll", (mouse as any).mousewheel);
+    if (mouseWheelHandler) {
+      mouse.element.removeEventListener("mousewheel", mouseWheelHandler);
+      mouse.element.removeEventListener("DOMMouseScroll", mouseWheelHandler);
+    }
 
     const mouseConstraint = MouseConstraint.create(engine, {
       mouse,
