@@ -19,18 +19,18 @@ interface TagConfig {
 
 const TAGS: TagConfig[] = [
   { type: "text", label: "Web Developer" },
-  {
-    type: "icon",
-    icon: <ArrowDown size={57} strokeWidth={3} color="#090909" />,
-  },
+  // {
+  //   type: "icon",
+  //   icon: <ArrowDown size={57} strokeWidth={3} color="#090909" />,
+  // },
   { type: "text", label: "2+ Years Exp" },
   { type: "image", imageSrc: headphoneImg },
   { type: "image", imageSrc: crownImg },
   { type: "text", label: "Next.js" },
-  {
-    type: "icon",
-    icon: <Asterisk size={69} strokeWidth={3} color="#090909" />,
-  },
+  // {
+  //   type: "icon",
+  //   icon: <Asterisk size={69} strokeWidth={3} color="#090909" />,
+  // },
   { type: "text", label: "React.js" },
   { type: "text", label: "Full Stack" },
   { type: "text", label: "GDG Marketing Lead", hasStatusDot: true },

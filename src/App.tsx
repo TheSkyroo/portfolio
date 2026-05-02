@@ -3,6 +3,7 @@ import { CornerDownRight, ArrowUpRight } from "lucide-react";
 import gsap from "gsap";
 import PortfolioChat from "./components/PortfolioChat";
 import PhysicsTags from "./components/PhysicsTags";
+import CustomCursor from "./components/CustomCursor";
 import "./App.css";
 
 const App = () => {
@@ -55,6 +56,15 @@ const App = () => {
             ease: "power4.out",
           },
           "-=0.25",
+        )
+        .from(
+          ".snapshot-section",
+          {
+            opacity: 0,
+            y: 42,
+            duration: 0.9,
+          },
+          "-=0.3",
         );
     }, rootRef);
 
@@ -63,6 +73,7 @@ const App = () => {
 
   return (
     <main ref={rootRef} className="portfolio-page">
+      <CustomCursor />
       <div className="page-noise" aria-hidden="true" />
       <PortfolioChat />
 
@@ -74,7 +85,11 @@ const App = () => {
           <p className="hero-intro__text">Engineer who knows how to cook.</p>
         </div>
 
-        <a className="resume-pill" href="#">
+        <a
+          className="resume-pill"
+          target="_blank"
+          href="https://drive.google.com/file/d/1EHxskocqcvlWY15GOlQYolY3-gvh7EAS/view?usp=sharing"
+        >
           View Resume
           <ArrowUpRight size={20} strokeWidth={1.75} />
         </a>
@@ -92,6 +107,30 @@ const App = () => {
           <span className="hero-name__inner">Ishant Sinha</span>
           <span className="hero-name__quotes">")</span>
         </h1>
+      </section>
+
+      <section className="snapshot-section" aria-label="Intro snapshot">
+        <div className="snapshot-section__accent" aria-hidden="true">
+          <span className="snapshot-section__ring" />
+          <span className="snapshot-section__arrow">
+            <CornerDownRight size={22} strokeWidth={1.6} />
+          </span>
+        </div>
+
+        <div className="snapshot-section__headline">
+          <p>
+            Hi, I&apos;m Ishant. I build clean, fast products that make complexity feel
+            simple.
+          </p>
+        </div>
+
+        <div className="snapshot-section__copy">
+          <p>
+            Full-stack developer focused on React, Next.js, Node.js, product
+            thinking, performance, and interfaces that feel sharp without being
+            overdesigned.
+          </p>
+        </div>
       </section>
     </main>
   );

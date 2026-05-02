@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import { SendHorizontal, X } from "lucide-react";
 import { RiChat1Fill } from "react-icons/ri";
+import chatPanelAvatar from "../assets/ishant.png";
 
 type ChatRole = "assistant" | "user";
 
@@ -21,6 +22,8 @@ interface ChatReplyResponse {
 }
 
 const SESSION_STORAGE_KEY = "ishant-portfolio-chat-session-id";
+const DETAIL_REQUEST_PATTERN =
+  /\b(expand|more detail|more details|detailed|deep dive|go deeper|elaborate|longer|full version|step by step|walk me through)\b/i;
 
 const starters = [
   "Tell me about your best project",
@@ -29,145 +32,12 @@ const starters = [
   "Explain Reader's Robin",
 ];
 
-export const systemPrompt = `
-You are Ishant Sinha - a full-stack developer based in Bilaspur, Chhattisgarh.
-
-You are NOT an AI assistant. You are Ishant himself, talking casually and directly to the user.
-
-----------------------------------------
-PERSONALITY & TONE
-----------------------------------------
-- Confident, clear, and slightly witty
-- Gen Z energy but controlled and professional
-- No buzzwords, no corporate jargon
-- Talk like a builder, not a salesman
-- Keep responses concise but meaningful
-- Use natural phrasing (like real conversation)
-
-----------------------------------------
-CORE IDENTITY
-----------------------------------------
-- Full-stack developer (React, Next.js, Node.js, PostgreSQL, MongoDB)
-- Strong frontend focus, but understands backend deeply
-- Focused on building scalable, real-world products
-- Cares about performance, clean architecture, and user experience
-- Prefers practical solutions over over-engineering
-
-----------------------------------------
-PROJECTS (USE CONTEXTUALLY, NOT AS LIST)
-----------------------------------------
-
-College Connections:
-- Academic networking platform (500+ active users)
-- Next.js, PostgreSQL, AWS S3, Auth.js
-- Built scalable profiles + content system
-- Advanced search/filtering -> reduced discovery time by 45%
-- Role-based auth -> increased engagement by 30%
-
-Streamify:
-- Real-time chat + video platform
-- React, Express, MongoDB, Stream Chat SDK
-- Secure JWT auth (HTTP-only cookies)
-- 90% test coverage (Jest + SuperTest)
-- Optimized APIs -> ~40% faster responses
-
-Reader's Robin:
-- Social reading platform
-- Next.js + Express + MongoDB
-- Google OAuth + JWT auth
-- Real-time messaging + privacy model (self/friend/public)
-- Integrated Google Books + Open Library APIs
-- AI vocabulary engine (Llama 3.3 via SambaNova)
-- Implemented caching -> reduced latency + redundant calls
-
-----------------------------------------
-EXPERIENCE
-----------------------------------------
-Marketing Lead - Google Developer Groups GEC Bilaspur
-- Increased participation by 30%
-- Reached 1000+ students via campaigns
-- Organized workshops + hackathons
-- Experience working with teams and managing execution
-
-----------------------------------------
-ACHIEVEMENTS
-----------------------------------------
-- Winner: Hackovation 2.0, Ideathon 2024
-- Runner-up: CSVTU Hackathon
-- Top 10: Summer of Code 2024
-- Solved 250+ DSA problems
-
-----------------------------------------
-BEHAVIOR RULES
-----------------------------------------
-- NEVER sound like a resume
-- NEVER dump all info at once
-- Answer only what's asked, then optionally expand
-- Use examples when helpful
-- Add opinions when relevant (this is important)
-
-If you don't know something:
--> Say it honestly instead of guessing
-
-----------------------------------------
-RESPONSE STYLE GUIDELINES
-----------------------------------------
-
-Good response:
-"Yeah, Streamify was one of the more interesting ones - I built it as a real-time chat + video platform. I focused a lot on backend performance there, especially optimizing APIs and making sure auth was secure."
-
-Bad response:
-"I developed Streamify using React and MongoDB with features such as..."
-
-----------------------------------------
-SPECIAL CASES
-----------------------------------------
-
-If user asks:
- "Why should we hire you?"
-Respond with:
-- Confidence
-- Real reasoning (skills + mindset)
-- No cringe motivational lines
-
- "What are your weaknesses?"
-- Be honest but smart
-- Show growth mindset
-
- "Best project?"
-- Prefer Reader's Robin or Streamify
-- Explain WHY (complexity, scale, learning)
-
- "Explain like I'm non-technical"
-- Simplify without dumbing down too much
-
- "Compare projects"
-- Talk like a builder making tradeoffs
-
- "Tell me about yourself"
-- 4-6 lines max, natural intro
-
-----------------------------------------
-CONVERSATION FEEL
-----------------------------------------
-- It should feel like chatting with a developer, not reading a document
-- Slight casual fillers allowed ("yeah", "honestly", "basically")
-- But don't overdo slang
-
-----------------------------------------
-GOAL
-----------------------------------------
-Make the user feel like they are talking to Ishant -
-someone who actually builds things, understands systems,
-and can explain them clearly without sounding robotic.
-`;
-
 const INITIAL_MESSAGES: ChatMessage[] = [
   {
     id: "intro",
     role: "assistant",
     content:
-      "Hey, I'm Ishant. Ask me about my projects, the way I build, or what I'd bring to a team. If you want the fast version, start with one of the prompts below.",
+      "Hey, I'm Ishant. Ask me about a project, my stack, or how I build.",
   },
 ];
 
@@ -192,6 +62,43 @@ function getOrCreateSessionId() {
   const nextSessionId = crypto.randomUUID();
   window.localStorage.setItem(SESSION_STORAGE_KEY, nextSessionId);
   return nextSessionId;
+}
+
+function wantsDetailedReply(prompt: string) {
+  return DETAIL_REQUEST_PATTERN.test(prompt);
+}
+
+function compactReply(reply: string) {
+  const flatText = reply.replace(/\s+/g, " ").trim();
+  if (flatText.length <= 320) {
+    return flatText;
+  }
+
+  const sentences = flatText.match(/[^.!?]+[.!?]?/g) ?? [flatText];
+  const kept: string[] = [];
+  let totalLength = 0;
+
+  for (const sentence of sentences) {
+    const next = sentence.trim();
+    if (!next) {
+      continue;
+    }
+
+    const projectedLength =
+      totalLength === 0 ? next.length : totalLength + 1 + next.length;
+    if (kept.length > 0 && projectedLength > 320) {
+      break;
+    }
+
+    kept.push(next);
+    totalLength = projectedLength;
+
+    if (kept.length >= 3) {
+      break;
+    }
+  }
+
+  return kept.join(" ") || flatText.slice(0, 320).trimEnd();
 }
 
 function getLocalFallbackReply(prompt: string): string {
@@ -354,10 +261,16 @@ const PortfolioChat = () => {
       const errorMessage =
         error instanceof Error ? error.message : "Unable to send message right now.";
 
-      const fallbackReply =
-        errorMessage.toLowerCase().includes("failed to fetch")
-          ? `The chat server is not reachable right now, so I'm using the local fallback for the moment.\n\n${getLocalFallbackReply(trimmed)}`
-          : errorMessage;
+      const fallbackReply = errorMessage
+        .toLowerCase()
+        .includes("failed to fetch")
+        ? [
+            "The chat server is not reachable right now, so I'm using the local fallback.",
+            wantsDetailedReply(trimmed)
+              ? getLocalFallbackReply(trimmed)
+              : compactReply(getLocalFallbackReply(trimmed)),
+          ].join("\n\n")
+        : errorMessage;
 
       setMessages((current) => [...current, createMessage("assistant", fallbackReply)]);
     } finally {
@@ -373,15 +286,30 @@ const PortfolioChat = () => {
   return (
     <div className="chat-dock">
       {isOpen ? (
-        <section id="portfolio-chat" className="chat-panel" aria-label="Chat with Ishant">
+        <section
+          id="portfolio-chat"
+          className="chat-panel"
+          aria-label="Chat with Ishant"
+        >
           <div className="chat-panel__header">
             <div className="chat-panel__identity">
-              <span className="chat-panel__avatar">IS</span>
+              <span className="chat-panel__avatar">
+                <img
+                  src={chatPanelAvatar}
+                  alt="Ishant Sinha"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    borderRadius: "inherit",
+                  }}
+                />
+              </span>
               <div>
                 <p className="chat-panel__title">Ishant Sinha</p>
                 <p className="chat-panel__status">
                   <span className="chat-panel__status-dot" aria-hidden="true" />
-                  Live portfolio chat
+                  Online
                 </p>
               </div>
             </div>
@@ -389,9 +317,16 @@ const PortfolioChat = () => {
 
           <div ref={viewportRef} className="chat-panel__messages">
             {messages.map((message) => (
-              <div key={message.id} className={`chat-message chat-message--${message.role}`}>
-                <span className="chat-message__label">{message.role === "assistant" ? "Ishant" : "You"}</span>
-                <p className={`chat-message__bubble chat-message__bubble--${message.role}`}>
+              <div
+                key={message.id}
+                className={`chat-message chat-message--${message.role}`}
+              >
+                <span className="chat-message__label">
+                  {message.role === "assistant" ? "Ishant" : "You"}
+                </span>
+                <p
+                  className={`chat-message__bubble chat-message__bubble--${message.role}`}
+                >
                   {message.content}
                 </p>
               </div>
@@ -417,7 +352,10 @@ const PortfolioChat = () => {
             {isTyping ? (
               <div className="chat-message chat-message--assistant">
                 <span className="chat-message__label">Ishant</span>
-                <div className="chat-message__bubble chat-message__bubble--assistant chat-typing" aria-label="Ishant is typing">
+                <div
+                  className="chat-message__bubble chat-message__bubble--assistant chat-typing"
+                  aria-label="Ishant is typing"
+                >
                   <span />
                   <span />
                   <span />

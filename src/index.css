@@ -12,6 +12,7 @@
 *::before,
 *::after {
   box-sizing: border-box;
+  cursor: none !important;
 }
 
 html {
@@ -21,6 +22,7 @@ html {
 body {
   margin: 0;
   min-width: 320px;
+  cursor: none;
   min-height: 100vh;
   overflow-x: hidden;
   background: #090909;
