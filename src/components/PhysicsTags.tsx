@@ -1,18 +1,35 @@
 import { useEffect, useRef, useState } from "react";
 import Matter from "matter-js";
 
+import { ArrowDown, Asterisk } from "lucide-react";
+import heroImg from "../assets/hero.png";
+
+type TagType = "text" | "icon" | "image";
+
 interface TagConfig {
-  label: string;
+  type: TagType;
+  label?: string;
   hasStatusDot?: boolean;
+  icon?: React.ReactNode;
+  imageSrc?: string;
 }
 
 const TAGS: TagConfig[] = [
-  { label: "Web Developer" },
-  { label: "2+ Years Exp" },
-  { label: "Next.js" },
-  { label: "React.js" },
-  { label: "Full Stack" },
-  { label: "GDG Marketing Lead", hasStatusDot: true },
+  { type: "text", label: "Web Developer" },
+  {
+    type: "icon",
+    icon: <ArrowDown size={57} strokeWidth={1.5} color="#f2ede5" />,
+  },
+  { type: "text", label: "2+ Years Exp" },
+  { type: "image", imageSrc: heroImg },
+  { type: "text", label: "Next.js" },
+  {
+    type: "icon",
+    icon: <Asterisk size={69} strokeWidth={1.5} color="#f2ede5" />,
+  },
+  { type: "text", label: "React.js" },
+  { type: "text", label: "Full Stack" },
+  { type: "text", label: "GDG Marketing Lead", hasStatusDot: true },
 ];
 
 /* ── Helpers ────────────────────────────────────────── */
@@ -22,8 +39,8 @@ function measureTag(label: string, hasStatusDot: boolean): { w: number; h: numbe
   const span = document.createElement("span");
   span.style.cssText = `
     position:absolute;visibility:hidden;white-space:nowrap;
-    font-family:"IBM Plex Mono",monospace;font-size:18px;
-    letter-spacing:-0.04em;padding:0 32px;
+    font-family:"IBM Plex Mono",monospace;font-size:33px;
+    letter-spacing:-0.04em;padding:0 60px;
   `;
   span.textContent = label;
   if (hasStatusDot) {
@@ -33,7 +50,7 @@ function measureTag(label: string, hasStatusDot: boolean): { w: number; h: numbe
   document.body.appendChild(span);
   const w = span.offsetWidth + 8; // small buffer
   document.body.removeChild(span);
-  const h = 52;
+  const h = 93;
   return { w: Math.max(w, 100), h };
 }
 
@@ -45,7 +62,13 @@ const PhysicsTags = () => {
   const renderRef = useRef<Matter.Render | null>(null);
   const runnerRef = useRef<Matter.Runner | null>(null);
   const [tagBodies, setTagBodies] = useState<
-    { body: Matter.Body; tag: TagConfig; w: number; h: number }[]
+    {
+      body: Matter.Body;
+      tag: TagConfig;
+      w: number;
+      h: number;
+      isCircle: boolean;
+    }[]
   >([]);
   const animFrameRef = useRef<number>(0);
 
@@ -106,28 +129,65 @@ const PhysicsTags = () => {
       render: { visible: false },
     });
 
-    Composite.add(engine.world, [floor, leftWall, rightWall]);
+    const ceiling = Bodies.rectangle(
+      width / 2,
+      -wallThickness / 2,
+      width * 2,
+      wallThickness,
+      {
+        isStatic: true,
+        friction: 0.8,
+        restitution: 0.5,
+        render: { visible: false },
+      },
+    );
+
+    Composite.add(engine.world, [floor, leftWall, rightWall, ceiling]);
 
     // Create tag bodies
-    const createdBodies: { body: Matter.Body; tag: TagConfig; w: number; h: number }[] = [];
+    const createdBodies: {
+      body: Matter.Body;
+      tag: TagConfig;
+      w: number;
+      h: number;
+      isCircle: boolean;
+    }[] = [];
 
     TAGS.forEach((tag, i) => {
-      const { w, h } = measureTag(tag.label, !!tag.hasStatusDot);
-
-      // Spread tags across the width, start above the visible area
+      let w: number, h: number, body: Matter.Body;
+      let isCircle = false;
       const x = (width / (TAGS.length + 1)) * (i + 1) + (Math.random() - 0.5) * 40;
-      const y = -80 - i * 70; // stagger vertically above viewport
+      const y = 60 + Math.random() * 40; // spawn inside the container below ceiling
 
-      const body = Bodies.rectangle(x, y, w, h, {
-        chamfer: { radius: h / 2 }, // pill shape
-        restitution: 0.25,
-        friction: 0.4,
-        frictionAir: 0.02,
-        density: 0.002,
-        render: { visible: false },
-      });
+      if (tag.type === "text") {
+        const dims = measureTag(tag.label || "", !!tag.hasStatusDot);
+        w = dims.w;
+        h = dims.h;
 
-      createdBodies.push({ body, tag, w, h });
+        body = Bodies.rectangle(x, y, w, h, {
+          chamfer: { radius: h / 2 }, // pill shape
+          restitution: 0.25,
+          friction: 0.4,
+          frictionAir: 0.02,
+          density: 0.002,
+          render: { visible: false },
+        });
+      } else {
+        isCircle = true;
+        const radius = 66; // 132px diameter
+        w = radius * 2;
+        h = radius * 2;
+
+        body = Bodies.circle(x, y, radius, {
+          restitution: 0.25,
+          friction: 0.4,
+          frictionAir: 0.02,
+          density: 0.002,
+          render: { visible: false },
+        });
+      }
+
+      createdBodies.push({ body, tag, w, h, isCircle });
       Composite.add(engine.world, body);
     });
 
@@ -166,12 +226,26 @@ const PhysicsTags = () => {
     };
     animFrameRef.current = requestAnimationFrame(syncDOM);
 
-    // Cursor feedback when hovering/dragging
+    let isDragging = false;
     Events.on(mouseConstraint, "startdrag", () => {
+      isDragging = true;
       container.style.cursor = "grabbing";
     });
     Events.on(mouseConstraint, "enddrag", () => {
-      container.style.cursor = "grab";
+      isDragging = false;
+      const found = Matter.Query.point(
+        createdBodies.map((b) => b.body),
+        mouseConstraint.mouse.position,
+      );
+      container.style.cursor = found.length > 0 ? "grab" : "default";
+    });
+    Events.on(mouseConstraint, "mousemove", () => {
+      if (isDragging) return;
+      const found = Matter.Query.point(
+        createdBodies.map((b) => b.body),
+        mouseConstraint.mouse.position,
+      );
+      container.style.cursor = found.length > 0 ? "grab" : "default";
     });
 
     // Handle resize
@@ -190,9 +264,13 @@ const PhysicsTags = () => {
         y: newH - 2 + wallThickness / 2,
       });
 
-      // Move walls
+      // Move walls and ceiling
       Matter.Body.setPosition(leftWall, { x: -wallThickness / 2, y: newH / 2 });
-      Matter.Body.setPosition(rightWall, { x: newW + wallThickness / 2, y: newH / 2 });
+      Matter.Body.setPosition(rightWall, {
+        x: newW + wallThickness / 2,
+        y: newH / 2,
+      });
+      Matter.Body.setPosition(ceiling, { x: newW / 2, y: -wallThickness / 2 });
     };
 
     window.addEventListener("resize", handleResize);
@@ -209,25 +287,42 @@ const PhysicsTags = () => {
   }, []);
 
   return (
-    <div
-      ref={sceneRef}
-      className="physics-tags-container"
-      style={{ cursor: "grab" }}
-    >
-      {tagBodies.map(({ body, tag, w, h }) => (
-        <div
-          key={tag.label}
-          className="physics-tag"
-          style={{
-            width: w,
-            height: h,
-            transform: `translate(${body.position.x - w / 2}px, ${body.position.y - h / 2}px) rotate(${body.angle}rad)`,
-          }}
-        >
-          <span>{tag.label}</span>
-          {tag.hasStatusDot && <span className="physics-tag__dot" />}
-        </div>
-      ))}
+    <div ref={sceneRef} className="physics-tags-container">
+      {tagBodies.map(({ body, tag, w, h, isCircle }, index) => {
+        const key = tag.label || tag.imageSrc || `icon-${index}`;
+        return (
+          <div
+            key={key}
+            className={`physics-tag ${isCircle ? "physics-tag--circle" : ""}`}
+            style={{
+              width: w,
+              height: h,
+              transform: `translate(${body.position.x - w / 2}px, ${body.position.y - h / 2}px) rotate(${body.angle}rad)`,
+            }}
+          >
+            {tag.type === "text" && (
+              <>
+                <span>{tag.label}</span>
+                {tag.hasStatusDot && <span className="physics-tag__dot" />}
+              </>
+            )}
+            {tag.type === "icon" && tag.icon}
+            {tag.type === "image" && tag.imageSrc && (
+              <img
+                src={tag.imageSrc}
+                alt=""
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  borderRadius: "50%",
+                  objectFit: "cover",
+                  pointerEvents: "none",
+                }}
+              />
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 };

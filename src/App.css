@@ -48,7 +48,7 @@
 
 .hero-intro {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 1rem;
   max-width: 45rem;
 }
@@ -125,7 +125,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.75rem;
+  gap: 1.35rem;
   border: 1px solid var(--page-line);
   border-radius: 999px;
   background: var(--page-glass);
@@ -140,14 +140,14 @@
 
 .physics-tag span:first-child {
   font-family: var(--font-mono);
-  font-size: clamp(0.95rem, 1.4vw, 1.12rem);
+  font-size: clamp(1.725rem, 2.55vw, 2.07rem);
   letter-spacing: -0.04em;
   color: var(--page-text);
 }
 
 .physics-tag__dot {
-  width: 0.65rem;
-  height: 0.65rem;
+  width: 1.125rem;
+  height: 1.125rem;
   border-radius: 999px;
   background: #2cff00;
   box-shadow: 0 0 16px rgba(44, 255, 0, 0.7);
@@ -162,14 +162,37 @@
 
 .hero-name__text {
   margin: 0;
-  text-align: center;
+  text-align: left;
   font-family: var(--font-display);
-  font-size: clamp(6rem, 17.2vw, 14.2rem);
+  font-size: clamp(4.4rem, 12.4vw, 10.25rem);
   font-weight: 500;
   line-height: 0.84;
   letter-spacing: -0.085em;
   color: #f2ede5;
   white-space: nowrap;
+}
+
+.hero-name__code {
+  font-family: var(--font-mono);
+  font-size: clamp(1.35rem, 3.2vw, 2.85rem);
+  font-weight: 400;
+  opacity: 0.4;
+  letter-spacing: -0.02em;
+  vertical-align: baseline;
+  margin-right: 0.05em;
+}
+
+.hero-name__quotes {
+  font-family: var(--font-mono);
+  font-size: clamp(2.8rem, 7vw, 6.2rem);
+  opacity: 0.4;
+  font-weight: 400;
+  vertical-align: baseline;
+}
+
+.hero-name__inner {
+  margin: 0 0.06em;
+  vertical-align: baseline;
 }
 
 /* ── Responsive ─────────────────────────────────────── */

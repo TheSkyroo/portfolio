@@ -67,11 +67,9 @@ const App = () => {
       <header className="hero-header">
         <div className="hero-intro">
           <span className="intro-mark" aria-hidden="true">
-            <ArrowDownLeft size={18} strokeWidth={1.7} />
+            <ArrowDownLeft size={18} strokeWidth={2} />
           </span>
-          <p className="hero-intro__text">
-            Product designer who actually gives a fu*k about the product.
-          </p>
+          <p className="hero-intro__text">Engineer who knows how to cook.</p>
         </div>
 
         <a className="resume-pill" href="#">
@@ -86,7 +84,12 @@ const App = () => {
       </section>
 
       <section className="hero-name" aria-label="Name">
-        <h1 className="hero-name__text">Ishant Sinha</h1>
+        <h1 className="hero-name__text">
+          <span className="hero-name__code">console.log</span>
+          <span className="hero-name__quotes">("</span>
+          <span className="hero-name__inner">Ishant Sinha</span>
+          <span className="hero-name__quotes">")</span>
+        </h1>
       </section>
     </main>
   );
