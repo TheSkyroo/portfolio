@@ -18,14 +18,14 @@ const TAGS: TagConfig[] = [
   { type: "text", label: "Web Developer" },
   {
     type: "icon",
-    icon: <ArrowDown size={57} strokeWidth={1.5} color="#f2ede5" />,
+    icon: <ArrowDown size={57} strokeWidth={3} color="#090909" />,
   },
   { type: "text", label: "2+ Years Exp" },
   { type: "image", imageSrc: heroImg },
   { type: "text", label: "Next.js" },
   {
     type: "icon",
-    icon: <Asterisk size={69} strokeWidth={1.5} color="#f2ede5" />,
+    icon: <Asterisk size={69} strokeWidth={3} color="#090909" />,
   },
   { type: "text", label: "React.js" },
   { type: "text", label: "Full Stack" },

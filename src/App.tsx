@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
-import { ArrowDownLeft, ArrowUpRight } from "lucide-react";
+import { CornerDownRight, ArrowUpRight } from "lucide-react";
+import { RiChat1Fill } from "react-icons/ri";
 import gsap from "gsap";
 import PhysicsTags from "./components/PhysicsTags";
 import "./App.css";
@@ -63,18 +64,21 @@ const App = () => {
   return (
     <main ref={rootRef} className="portfolio-page">
       <div className="page-noise" aria-hidden="true" />
+      <button type="button" className="chat-fab" aria-label="Open chat">
+        <RiChat1Fill />
+      </button>
 
       <header className="hero-header">
         <div className="hero-intro">
           <span className="intro-mark" aria-hidden="true">
-            <ArrowDownLeft size={18} strokeWidth={2} />
+            <CornerDownRight size={18} strokeWidth={2} />
           </span>
           <p className="hero-intro__text">Engineer who knows how to cook.</p>
         </div>
 
         <a className="resume-pill" href="#">
           View Resume
-          <ArrowUpRight size={18} strokeWidth={1.75} />
+          <ArrowUpRight size={20} strokeWidth={1.75} />
         </a>
       </header>
 
