@@ -217,7 +217,7 @@ const BentoCard = ({
           ref={contentRef}
           className={clsx(
             "relative mt-auto",
-            variant === "text" ? "max-w-[24rem]" : "max-w-[30rem]",
+            variant === "text" ? "max-w-[32rem]" : "max-w-[30rem]",
           )}
         >
           <h3
@@ -225,7 +225,7 @@ const BentoCard = ({
               "max-w-[10ch] text-[2.25rem] leading-[0.9] tracking-[-0.08em] text-white sm:text-[3rem]",
               variant === "full" && "max-w-[12ch] text-[2rem] sm:text-[2.6rem]",
               variant === "text" &&
-                "max-w-[11ch] text-[2.6rem] sm:text-[3.6rem]",
+                "max-w-[16ch] text-[2.6rem] sm:text-[3.6rem]",
             )}
           >
             {title}
