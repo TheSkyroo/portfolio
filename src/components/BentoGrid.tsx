@@ -12,9 +12,7 @@ const BentoGrid = () => {
 
   useEffect(() => {
     const grid = gridRef.current;
-    if (!grid) {
-      return;
-    }
+    if (!grid) return;
 
     const ctx = gsap.context(() => {
       const items = gsap.utils.toArray<HTMLElement>(".bento-grid__item", grid);
@@ -23,27 +21,21 @@ const BentoGrid = () => {
       ).matches;
 
       if (reduceMotion) {
-        gsap.set(items, {
-          opacity: 1,
-          y: 0,
-        });
+        gsap.set(items, { opacity: 1, y: 0 });
         return;
       }
 
-      gsap.set(items, {
-        opacity: 0,
-        y: 56,
-      });
+      gsap.set(items, { opacity: 0, y: 40 });
 
       gsap.to(items, {
         opacity: 1,
         y: 0,
-        duration: 0.9,
+        duration: 0.7,
         ease: "power3.out",
-        stagger: 0.14,
+        stagger: 0.12,
         scrollTrigger: {
           trigger: grid,
-          start: "top 78%",
+          start: "top 85%",
           once: true,
         },
       });
@@ -53,8 +45,8 @@ const BentoGrid = () => {
           item.querySelector<HTMLElement>("[data-bento-float='true']") ?? item;
 
         gsap.to(floatingNode, {
-          y: index % 2 === 0 ? -8 : 8,
-          duration: 3.2 + index * 0.3,
+          y: index % 2 === 0 ? -6 : 6,
+          duration: 3 + index * 0.2,
           ease: "sine.inOut",
           repeat: -1,
           yoyo: true,
@@ -66,17 +58,21 @@ const BentoGrid = () => {
   }, []);
 
   return (
-    <section className="feature-bento mb-20" aria-label="Selected Projects">
-      <div className="mb-10 lg:mb-14">
-        <h2 className="font-display text-4xl mt-20 mb-20 font-medium tracking-tighter text-white sm:text-5xl lg:text-6xl">
+    <section
+      className="feature-bento px-4 sm:px-6 md:px-10 lg:px-16 mb-16 sm:mb-20"
+      aria-label="Selected Projects"
+    >
+      <div className="mb-8 sm:mb-10 lg:mb-14">
+        <h2 className="font-display mt-12 sm:mt-16 lg:mt-20 mb-10 sm:mb-14 lg:mb-20 font-medium tracking-tight text-white text-2xl sm:text-4xl md:text-5xl lg:text-6xl">
           <span className="text-white/40"> Selected</span> Projects
         </h2>
       </div>
+
       <div
         ref={gridRef}
-        className="grid h-auto w-full grid-cols-1 gap-5 sm:gap-6 lg:grid-cols-2"
+        className="grid w-full grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-2"
       >
-        <BentoTilt className="min-h-[22rem] sm:min-h-[24rem]">
+        <BentoTilt className="bento-grid__item min-h-[240px] sm:min-h-[280px] md:min-h-[320px]">
           <BentoCard
             src=""
             title={<>reader&apos;s robin</>}
@@ -84,19 +80,23 @@ const BentoGrid = () => {
             eyebrow="Deep Build"
             variant="text"
           >
-            <a 
+            <a
               href="https://reader-s-robin.vercel.app/"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-3 rounded-full border border-white/18 bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/20"
+              className="inline-flex items-center gap-2 sm:gap-3 rounded-full border border-white/20 bg-white/10 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-white transition-colors hover:bg-white/20"
             >
               Visit Site
-              <ArrowUpRight size={18} strokeWidth={1.8} />
+              <ArrowUpRight
+                size={16}
+                className="sm:w-[18px] sm:h-[18px]"
+                strokeWidth={1.8}
+              />
             </a>
           </BentoCard>
         </BentoTilt>
 
-        <BentoTilt className="min-h-[22rem] sm:min-h-[24rem]">
+        <BentoTilt className="bento-grid__item min-h-[240px] sm:min-h-[280px] md:min-h-[320px]">
           <BentoCard
             src=""
             title={<>streamify</>}
@@ -104,19 +104,23 @@ const BentoGrid = () => {
             eyebrow="Realtime"
             variant="text"
           >
-            <a 
+            <a
               href="https://streamify-pvt-1.onrender.com/"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-3 rounded-full border border-white/18 bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/20"
+              className="inline-flex items-center gap-2 sm:gap-3 rounded-full border border-white/20 bg-white/10 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-white transition-colors hover:bg-white/20"
             >
               Visit Site
-              <ArrowUpRight size={18} strokeWidth={1.8} />
+              <ArrowUpRight
+                size={16}
+                className="sm:w-[18px] sm:h-[18px]"
+                strokeWidth={1.8}
+              />
             </a>
           </BentoCard>
         </BentoTilt>
 
-        <BentoTilt className="min-h-[22rem] sm:min-h-[24rem]">
+        <BentoTilt className="bento-grid__item min-h-[240px] sm:min-h-[280px] md:min-h-[320px]">
           <BentoCard
             src=""
             title={<>College connection</>}
@@ -124,19 +128,23 @@ const BentoGrid = () => {
             eyebrow="Scale"
             variant="text"
           >
-            <a 
+            <a
               href="https://college-connection.vercel.app/"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-3 rounded-full border border-white/18 bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/20"
+              className="inline-flex items-center gap-2 sm:gap-3 rounded-full border border-white/20 bg-white/10 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-white transition-colors hover:bg-white/20"
             >
               Visit Site
-              <ArrowUpRight size={18} strokeWidth={1.8} />
+              <ArrowUpRight
+                size={16}
+                className="sm:w-[18px] sm:h-[18px]"
+                strokeWidth={1.8}
+              />
             </a>
           </BentoCard>
         </BentoTilt>
 
-        <BentoTilt className="min-h-[22rem] sm:min-h-[24rem]">
+        <BentoTilt className="bento-grid__item min-h-[240px] sm:min-h-[280px] md:min-h-[320px]">
           <BentoCard
             src=""
             title={<>Meme lab</>}
@@ -144,14 +152,18 @@ const BentoGrid = () => {
             eyebrow="Visual Pass"
             variant="full"
           >
-            <a 
+            <a
               href="https://fahhhhhhhh.vercel.app/"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-3 rounded-full border border-white/18 bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/20"
+              className="inline-flex items-center gap-2 sm:gap-3 rounded-full border border-white/20 bg-white/10 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-white transition-colors hover:bg-white/20"
             >
               Visit Site
-              <ArrowUpRight size={18} strokeWidth={1.8} />
+              <ArrowUpRight
+                size={16}
+                className="sm:w-[18px] sm:h-[18px]"
+                strokeWidth={1.8}
+              />
             </a>
           </BentoCard>
         </BentoTilt>

@@ -41,98 +41,51 @@ const BentoCard = ({
 
   useEffect(() => {
     const card = cardRef.current;
-    if (!card) {
-      return;
-    }
+    if (!card) return;
 
     const allowHoverMotion =
       window.matchMedia("(pointer: fine)").matches &&
       !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     const ctx = gsap.context(() => {
-      gsap.set(glossRef.current, {
-        opacity: 0,
-      });
+      gsap.set(glossRef.current, { opacity: 0 });
 
       if (!allowHoverMotion) {
-        gsap.set(descriptionRef.current, {
-          y: 0,
-          opacity: 1,
-        });
-
+        gsap.set(descriptionRef.current, { y: 0, opacity: 1 });
         return;
       }
 
       gsap.set(descriptionRef.current, {
-        y: 18,
-        opacity: variant === "text" ? 0.9 : 0.74,
+        y: 16,
+        opacity: variant === "text" ? 0.9 : 0.8,
       });
 
-      const hoverTimeline = gsap.timeline({
+      const tl = gsap.timeline({
         paused: true,
-        defaults: {
-          ease: "power3.out",
-        },
+        defaults: { ease: "power3.out" },
       });
 
       if (mediaRef.current) {
-        hoverTimeline.to(
-          mediaRef.current,
-          {
-            scale: 1.12,
-            duration: 0.9,
-          },
-          0,
-        );
+        tl.to(mediaRef.current, { scale: 1.08, duration: 0.6 }, 0);
       }
 
-      hoverTimeline
-        .to(
-          contentRef.current,
-          {
-            y: -14,
-            duration: 0.55,
-          },
-          0,
-        )
-        .to(
-          descriptionRef.current,
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.5,
-          },
-          0.05,
-        )
-        .to(
-          glossRef.current,
-          {
-            opacity: 1,
-            duration: 0.45,
-          },
-          0,
-        );
+      tl.to(contentRef.current, { y: -10, duration: 0.4 }, 0)
+        .to(descriptionRef.current, { y: 0, opacity: 1, duration: 0.4 }, 0.05)
+        .to(glossRef.current, { opacity: 1, duration: 0.3 }, 0);
 
       if (badgeRef.current) {
-        hoverTimeline.to(
-          badgeRef.current,
-          {
-            y: -4,
-            duration: 0.4,
-          },
-          0,
-        );
+        tl.to(badgeRef.current, { y: -3, duration: 0.3 }, 0);
       }
 
-      const handlePointerEnter = () => hoverTimeline.play();
-      const handlePointerLeave = () => hoverTimeline.reverse();
+      const enter = () => tl.play();
+      const leave = () => tl.reverse();
 
-      card.addEventListener("mouseenter", handlePointerEnter);
-      card.addEventListener("mouseleave", handlePointerLeave);
+      card.addEventListener("mouseenter", enter);
+      card.addEventListener("mouseleave", leave);
 
       return () => {
-        card.removeEventListener("mouseenter", handlePointerEnter);
-        card.removeEventListener("mouseleave", handlePointerLeave);
+        card.removeEventListener("mouseenter", enter);
+        card.removeEventListener("mouseleave", leave);
       };
     }, cardRef);
 
@@ -144,10 +97,9 @@ const BentoCard = ({
   return (
     <article
       ref={cardRef}
-      data-bento-float="true"
       className={clsx(
-        "group relative h-full overflow-hidden rounded-2xl border shadow-[0_30px_80px_rgba(0,0,0,0.28)]",
-        "border-white/10 bg-zinc-950",
+        "group relative w-full h-full min-h-[260px] sm:min-h-[320px] md:min-h-[360px] overflow-hidden rounded-xl sm:rounded-2xl border",
+        "border-white/10 bg-zinc-950 shadow-lg sm:shadow-[0_20px_60px_rgba(0,0,0,0.3)]",
         tone === "violet" &&
           "border-violet-300/20 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.18),transparent_30%),linear-gradient(135deg,#7c3aed_0%,#4c1d95_48%,#12051f_100%)]",
         className,
@@ -155,22 +107,22 @@ const BentoCard = ({
     >
       {showMedia ? (
         <div className="absolute inset-0 overflow-hidden">
-          {posterSrc ? (
+          {posterSrc && (
             <img
               src={posterSrc}
               alt=""
               aria-hidden="true"
               className={clsx(
-                "absolute inset-0 h-full w-full object-cover transition-opacity duration-500",
-                videoFailed ? "opacity-100" : "opacity-35",
+                "absolute inset-0 w-full h-full object-cover transition-opacity duration-500",
+                videoFailed ? "opacity-100" : "opacity-40",
               )}
             />
-          ) : null}
+          )}
 
           <video
             ref={mediaRef}
             className={clsx(
-              "absolute inset-0 h-full w-full object-cover scale-[1.03]",
+              "absolute inset-0 w-full h-full object-cover scale-[1.02]",
               videoFailed ? "opacity-0" : "opacity-100",
             )}
             src={src}
@@ -182,49 +134,52 @@ const BentoCard = ({
             onError={() => setVideoFailed(true)}
           />
 
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.12),transparent_28%),linear-gradient(180deg,rgba(9,9,11,0.08)_0%,rgba(9,9,11,0.36)_36%,rgba(9,9,11,0.92)_100%)]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/40 to-black/90" />
         </div>
       ) : (
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.08),transparent_24%),radial-gradient(circle_at_80%_0%,rgba(255,255,255,0.03),transparent_30%)]" />
+        <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent" />
       )}
 
       <div
         ref={glossRef}
-        className="pointer-events-none absolute inset-0 bg-white/8 backdrop-blur-[2px]"
+        className="pointer-events-none absolute inset-0 bg-white/10 backdrop-blur-[1px]"
       />
 
-      <div className="relative z-10 flex h-full flex-col justify-between p-5 sm:p-6">
-        <div className="flex items-start justify-between gap-3">
+      <div className="relative z-10 flex h-full flex-col justify-between p-4 sm:p-5 md:p-6">
+        <div className="flex items-start justify-between gap-2 sm:gap-3">
           <div className="flex flex-wrap items-center gap-2">
-            {eyebrow ? (
-              <span className="rounded-full border border-white/12 bg-white/6 px-3 py-1 text-[0.65rem] font-medium uppercase tracking-[0.24em] text-white/70">
+            {eyebrow && (
+              <span className="rounded-full border border-white/10 bg-white/10 px-2.5 py-1 text-[10px] sm:text-xs uppercase tracking-widest text-white/70">
                 {eyebrow}
               </span>
-            ) : null}
+            )}
           </div>
 
-          {isComingSoon ? (
+          {isComingSoon && (
             <span
               ref={badgeRef}
-              className="rounded-full border border-emerald-300/25 bg-emerald-300/10 px-3 py-1 text-[0.65rem] font-medium uppercase tracking-[0.2em] text-emerald-200"
+              className="rounded-full border border-emerald-300/30 bg-emerald-300/10 px-2.5 py-1 text-[10px] sm:text-xs uppercase tracking-widest text-emerald-200"
             >
               Coming Soon
             </span>
-          ) : null}
+          )}
         </div>
 
         <div
           ref={contentRef}
           className={clsx(
-            "relative mt-auto",
-            variant === "text" ? "max-w-[24rem]" : "max-w-[30rem]",
+            "mt-auto w-full",
+            variant === "text"
+              ? "max-w-full sm:max-w-md"
+              : "max-w-full sm:max-w-lg",
           )}
         >
           <h3
             className={clsx(
-              "max-w-[10ch] text-[2.25rem] leading-[0.9] tracking-[-0.08em] text-white sm:text-[3rem]",
-              variant === "full" && "max-w-[12ch] text-[2rem] sm:text-[2.6rem]",
-              variant === "text" && "max-w-[11ch] text-[2.6rem] sm:text-[3.6rem]",
+              "text-[1.6rem] leading-tight tracking-tight text-white",
+              "sm:text-[2.2rem] md:text-[2.6rem] lg:text-[3rem]",
+              variant === "full" && "sm:text-[2rem] md:text-[2.4rem]",
+              variant === "text" && "sm:text-[2.4rem] md:text-[3.2rem]",
             )}
           >
             {title}
@@ -233,14 +188,14 @@ const BentoCard = ({
           <p
             ref={descriptionRef}
             className={clsx(
-              "mt-4 max-w-[30rem] text-sm leading-6 tracking-[-0.02em] text-white/78 sm:text-base",
-              variant === "text" && "text-white/88",
+              "mt-3 text-xs sm:text-sm md:text-base leading-relaxed text-white/80",
+              variant === "text" && "text-white/90",
             )}
           >
             {description}
           </p>
 
-          {children ? <div className="mt-5">{children}</div> : null}
+          {children && <div className="mt-4 sm:mt-5">{children}</div>}
         </div>
       </div>
     </article>
