@@ -198,6 +198,26 @@ function getLocalFallbackReply(prompt: string): string {
   return "Short version: I'm a full-stack developer who likes building products that feel clean, fast, and actually useful. If you want something more specific, ask me about a project, my stack, or how I work.";
 }
 
+function renderMessageContent(content: string) {
+  const emailRegex = /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/gi;
+  const parts = content.split(emailRegex);
+
+  return parts.map((part, i) => {
+    if (emailRegex.test(part)) {
+      return (
+        <a
+          key={i}
+          href={`mailto:${part}`}
+          className="underline decoration-white/30 underline-offset-4 transition-colors hover:text-white font-medium"
+        >
+          {part}
+        </a>
+      );
+    }
+    return part;
+  });
+}
+
 const PortfolioChat = () => {
   const [sessionId, setSessionId] = useState(getOrCreateSessionId);
   const [isOpen, setIsOpen] = useState(false);
@@ -282,6 +302,11 @@ const PortfolioChat = () => {
         const response = await fetch(`/api/chat/${sessionId}`);
         if (!response.ok) return;
 
+        const isJson = response.headers
+          .get("content-type")
+          ?.includes("application/json");
+        if (!isJson) return;
+
         const data = (await response.json()) as ChatHistoryResponse;
         if (!isCancelled && data.messages && data.messages.length > 0) {
           setMessages(data.messages);
@@ -322,9 +347,17 @@ const PortfolioChat = () => {
         }),
       });
 
-      const data = (await response.json()) as ChatReplyResponse;
-      if (!response.ok || !data.reply) {
-        throw new Error(data.error || "Unable to send message right now.");
+      const contentType = response.headers.get("content-type");
+      const isJson = contentType && contentType.includes("application/json");
+      const data = isJson
+        ? ((await response.json()) as ChatReplyResponse)
+        : null;
+
+      if (!response.ok || !data?.reply) {
+        throw new Error(
+          data?.error ||
+            `Server error: ${response.status} ${response.statusText}`,
+        );
       }
 
       setMessages((current) => [...current, createMessage("assistant", data.reply as string)]);
@@ -332,9 +365,13 @@ const PortfolioChat = () => {
       const errorMessage =
         error instanceof Error ? error.message : "Unable to send message right now.";
 
-      const fallbackReply = errorMessage
-        .toLowerCase()
-        .includes("failed to fetch")
+      const isConnectionError =
+        errorMessage.toLowerCase().includes("failed to fetch") ||
+        errorMessage.toLowerCase().includes("server error: 502") ||
+        errorMessage.toLowerCase().includes("server error: 503") ||
+        errorMessage.toLowerCase().includes("server error: 504");
+
+      const fallbackReply = isConnectionError
         ? [
             "The chat server is not reachable right now, so I'm using the local fallback.",
             wantsDetailedReply(trimmed)
@@ -398,7 +435,7 @@ const PortfolioChat = () => {
                 <p
                   className={`chat-message__bubble chat-message__bubble--${message.role}`}
                 >
-                  {message.content}
+                  {renderMessageContent(message.content)}
                 </p>
               </div>
             ))}
