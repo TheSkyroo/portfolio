@@ -36,34 +36,56 @@ const TAGS: TagConfig[] = [
 
 /* ── Helpers ────────────────────────────────────────── */
 
-/** Measure how wide a tag pill will be once rendered. */
-function measureTag(label: string, hasStatusDot: boolean): { w: number; h: number } {
-  const width = window.innerWidth;
+function getTagMetrics(width: number) {
+  const isMedium = width < 1024 && width >= 560;
   const isSmall = width < 560;
   const isVerySmall = width < 400;
 
-  // Match the CSS clamp(1.725rem, 2.55vw, 2.07rem)
-  // 1.725rem = 27.6px, 2.07rem = 33.12px
   let fontSize = 33;
-  if (isSmall) fontSize = 27.6;
-  if (isVerySmall) fontSize = 24;
+  let paddingX = 60;
+  let h = 93;
+  let circleRadius = 66;
 
+  if (isVerySmall) {
+    fontSize = 12;
+    paddingX = 12;
+    h = 36;
+    circleRadius = 24;
+  } else if (isSmall) {
+    fontSize = 15;
+    paddingX = 18;
+    h = 45;
+    circleRadius = 30;
+  } else if (isMedium) {
+    fontSize = 22;
+    paddingX = 36;
+    h = 62;
+    circleRadius = 44;
+  }
+
+  return { isSmall, isVerySmall, isMedium, fontSize, paddingX, h, circleRadius };
+}
+
+function measureTag(
+  label: string,
+  hasStatusDot: boolean,
+  metrics: ReturnType<typeof getTagMetrics>,
+): { w: number; h: number } {
   const span = document.createElement("span");
   span.style.cssText = `
     position:absolute;visibility:hidden;white-space:nowrap;
-    font-family:"IBM Plex Mono",monospace;font-size:${fontSize}px;
-    letter-spacing:-0.04em;padding:0 ${isSmall ? "40px" : "60px"};
+    font-family:"IBM Plex Mono",monospace;font-size:${metrics.fontSize}px;
+    letter-spacing:-0.04em;padding:0 ${metrics.paddingX}px;
   `;
   span.textContent = label;
   if (hasStatusDot) {
     span.textContent += "   •";
   }
   document.body.appendChild(span);
-  const w = span.offsetWidth + (isSmall ? 4 : 8); 
+  const w = span.offsetWidth + (metrics.isSmall ? 2 : 8);
   document.body.removeChild(span);
-  
-  const h = isVerySmall ? 70 : isSmall ? 80 : 93;
-  return { w: Math.max(w, isVerySmall ? 80 : 100), h };
+
+  return { w: Math.max(w, metrics.isVerySmall ? 40 : 100), h: metrics.h };
 }
 
 /* ── Component ──────────────────────────────────────── */
@@ -80,6 +102,7 @@ const PhysicsTags = () => {
       w: number;
       h: number;
       isCircle: boolean;
+      metrics: ReturnType<typeof getTagMetrics>;
     }[]
   >([]);
   const animFrameRef = useRef<number>(0);
@@ -88,7 +111,16 @@ const PhysicsTags = () => {
     const container = sceneRef.current;
     if (!container) return;
 
-    const { Engine, Render, Runner, Bodies, Composite, Mouse, MouseConstraint, Events } = Matter;
+    const {
+      Engine,
+      Render,
+      Runner,
+      Bodies,
+      Composite,
+      Mouse,
+      MouseConstraint,
+      Events,
+    } = Matter;
 
     const width = container.offsetWidth;
     const height = container.offsetHeight;
@@ -124,22 +156,40 @@ const PhysicsTags = () => {
     const wallThickness = 60;
     const floorY = height - 34; // floor sits slightly above the bottom, leaving a gap before the name
 
-    const floor = Bodies.rectangle(width / 2, floorY + wallThickness / 2, width * 2, wallThickness, {
-      isStatic: true,
-      friction: 0.8,
-      restitution: 0.15,
-      render: { visible: false },
-    });
+    const floor = Bodies.rectangle(
+      width / 2,
+      floorY + wallThickness / 2,
+      width * 2,
+      wallThickness,
+      {
+        isStatic: true,
+        friction: 0.8,
+        restitution: 0.15,
+        render: { visible: false },
+      },
+    );
 
-    const leftWall = Bodies.rectangle(-wallThickness / 2, height / 2, wallThickness, height * 3, {
-      isStatic: true,
-      render: { visible: false },
-    });
+    const leftWall = Bodies.rectangle(
+      -wallThickness / 2,
+      height / 2,
+      wallThickness,
+      height * 3,
+      {
+        isStatic: true,
+        render: { visible: false },
+      },
+    );
 
-    const rightWall = Bodies.rectangle(width + wallThickness / 2, height / 2, wallThickness, height * 3, {
-      isStatic: true,
-      render: { visible: false },
-    });
+    const rightWall = Bodies.rectangle(
+      width + wallThickness / 2,
+      height / 2,
+      wallThickness,
+      height * 3,
+      {
+        isStatic: true,
+        render: { visible: false },
+      },
+    );
 
     const ceiling = Bodies.rectangle(
       width / 2,
@@ -163,16 +213,20 @@ const PhysicsTags = () => {
       w: number;
       h: number;
       isCircle: boolean;
+      metrics: ReturnType<typeof getTagMetrics>;
     }[] = [];
+
+    const metrics = getTagMetrics(width);
 
     TAGS.forEach((tag, i) => {
       let w: number, h: number, body: Matter.Body;
       let isCircle = false;
-      const x = (width / (TAGS.length + 1)) * (i + 1) + (Math.random() - 0.5) * 40;
+      const x =
+        (width / (TAGS.length + 1)) * (i + 1) + (Math.random() - 0.5) * 40;
       const y = 60 + Math.random() * 40; // spawn inside the container below ceiling
 
       if (tag.type === "text") {
-        const dims = measureTag(tag.label || "", !!tag.hasStatusDot);
+        const dims = measureTag(tag.label || "", !!tag.hasStatusDot, metrics);
         w = dims.w;
         h = dims.h;
 
@@ -186,7 +240,7 @@ const PhysicsTags = () => {
         });
       } else {
         isCircle = true;
-        const radius = 66; // 132px diameter
+        const radius = metrics.circleRadius;
         w = radius * 2;
         h = radius * 2;
 
@@ -199,7 +253,7 @@ const PhysicsTags = () => {
         });
       }
 
-      createdBodies.push({ body, tag, w, h, isCircle });
+      createdBodies.push({ body, tag, w, h, isCircle, metrics });
       Composite.add(engine.world, body);
     });
 
@@ -306,7 +360,7 @@ const PhysicsTags = () => {
 
   return (
     <div ref={sceneRef} className="physics-tags-container">
-      {tagBodies.map(({ body, tag, w, h, isCircle }, index) => {
+      {tagBodies.map(({ body, tag, w, h, isCircle, metrics }, index) => {
         const key = tag.label || tag.imageSrc || `icon-${index}`;
         return (
           <div
@@ -320,8 +374,21 @@ const PhysicsTags = () => {
           >
             {tag.type === "text" && (
               <>
-                <span>{tag.label}</span>
-                {tag.hasStatusDot && <span className="physics-tag__dot" />}
+                <span style={{ fontSize: `${metrics.fontSize}px` }}>
+                  {tag.label}
+                </span>
+                {tag.hasStatusDot && (
+                  <span
+                    className="physics-tag__dot"
+                    style={{
+                      transform: metrics.isSmall 
+                        ? "scale(0.6)" 
+                        : metrics.isMedium 
+                          ? "scale(0.85)" 
+                          : "none",
+                    }}
+                  />
+                )}
               </>
             )}
             {tag.type === "icon" && tag.icon}

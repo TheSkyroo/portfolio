@@ -33,6 +33,7 @@ const CustomCursor = () => {
   return (
     <div
       ref={cursorRef}
+      className="custom-cursor"
       style={{
         position: "fixed",
         top: 0,

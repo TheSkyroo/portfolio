@@ -12,7 +12,6 @@ export const env = {
   port: Number(process.env.PORT || 3001),
   mongoUri: process.env.MONGODB_URI || "",
   sambaApiKeys: [
-    process.env.SAMBANOVA_API_KEY,
     process.env.SAMBANOVA_API_KEY_1,
     process.env.SAMBANOVA_API_KEY_2,
     process.env.SAMBANOVA_API_KEY_3,
