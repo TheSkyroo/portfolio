@@ -7,15 +7,40 @@ gsap.registerPlugin(ScrollTrigger);
 const SKILLS_DATA = [
   {
     category: "Languages",
-    skills: ["JavaScript (ES6+)", "HTML5", "CSS3", "SQL"],
+    skills: [
+      "JavaScript (ES6+)",
+      "HTML5",
+      "CSS3",
+      "SQL",
+      "Java",
+      "Python",
+      "C++",
+    ],
   },
   {
     category: "Frontend",
-    skills: ["React.js", "Next.js", "Tailwind CSS", "Vite", "Zustand", "GSAP"],
+    skills: [
+      "React.js",
+      "Next.js",
+      "Tailwind CSS",
+      "Vite",
+      "Zustand",
+      "GSAP",
+      "Daisy UI",
+      "GSAP",
+      "Matter.js",
+    ],
   },
   {
     category: "Backend",
-    skills: ["Node.js", "Express.js", "REST APIs", "JWT Auth", "Auth.js"],
+    skills: [
+      "Node.js",
+      "Express.js",
+      "REST APIs",
+      "JWT Auth",
+      "Auth.js",
+      "OAuth 2.0",
+    ],
   },
   {
     category: "Databases",
@@ -30,9 +55,10 @@ const SKILLS_DATA = [
       "Vercel",
       "Render",
       "Jest",
-      "SuperTest",
       "MediaPipe",
       "WebRTC",
+      "Sambanova",
+      "Codex",
     ],
   },
 ];
