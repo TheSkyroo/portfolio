@@ -13,20 +13,13 @@ const FOOTER_WORDS = [
   "Something caught your eye, right?",
   "Let’s turn this into a conversation",
   "I think we’d build something great together",
-  "You + Me = Interesting possibilities",
   "Not just code, I build solutions",
   "If you’re impressed, imagine working together",
   "Let’s create something impactful",
-  "This could be the start of something great",
-  "Looking for someone like me? You found one",
   "Still scrolling? I’ll take that as a yes",
-  "You hovered… I noticed",
   "Go ahead, click. I don’t bite",
-  "This is your sign to reach out",
   "Let’s skip the formalities and build something cool",
-  "Good teams start with a simple hello",
   "Let’s build products people actually love",
-  "Your next hire might be right here",
   "I turn ideas into shipped products",
   "Let’s make your next project faster and better",
   "Great things happen when we connect",
@@ -120,7 +113,7 @@ const FooterDetail = ({ isVisible, containerRef }: FooterDetailProps) => {
   return (
     <div
       ref={detailRef}
-      className="pointer-events-none absolute left-0 top-0 z-50 flex items-center gap-3 rounded-full border border-white bg-white px-7 py-3 text-base font-semibold text-black opacity-0 backdrop-blur-lg shadow-[0_8px_32px_rgba(0,0,0,0.3)] transition-[background-color,color,border-color] duration-300 hover:bg-white hover:text-black active:scale-95"
+      className="pointer-events-none absolute left-0 top-0 z-50 flex items-center gap-3 rounded-full font-bold border border-white bg-white px-9 py-4 text-base font-sans text-black opacity-0 backdrop-blur-lg shadow-[0_8px_32px_rgba(0,0,0,0.3)] transition-[background-color,color,border-color] duration-300 hover:bg-white hover:text-black active:scale-95"
       style={{ willChange: "transform, opacity" }}
     >
       <span

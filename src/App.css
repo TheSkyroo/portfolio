@@ -37,7 +37,7 @@
   transform: translate(1px, -1px);
 }
 /* Global Cursor Hiding */
-.portfolio-page:has([data-hide-cursor]:hover) .custom-cursor {
+.portfolio-page:has([data-hide-cursor="true"]:hover) .custom-cursor {
   opacity: 0 !important;
   visibility: hidden !important;
   pointer-events: none !important;
