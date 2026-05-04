@@ -10,33 +10,30 @@ const ReadersRobin = () => {
   return (
     <div className="min-h-screen bg-[#090909] text-[#f2ede5] p-6 md:p-12 lg:p-20 font-sans selection:bg-white/10 selection:text-white">
       {/* Header Section */}
-      <header className="max-w-6xl mx-auto mb-20 space-y-6">
-        <h1 className="detail_Header__text">Reader&apos;s Robin</h1>
-        <p className="appDetails-section__copy mt-5">
-          A full-stack social reading app built with a Next.js frontend and an
-          Express + MongoDB backend. It combines book discovery, onboarding
-          based on reading taste, shelf management, and AI-powered learning.
+      <header className="max-w-6xl mx-auto mb-4 space-y-6">
+        <h2 className="font-display text-4xl font-medium tracking-tighter text-white sm:text-5xl lg:text-6xl text-center">
+          <span className="text-white/40">Reader&apos;s</span> Robin
+        </h2>
+
+        <p className="appDetails-section__copy mt-5 text-center">
+          Reader&apos;s Robin is a full-stack social reading platform designed
+          to transform the solitary experience of reading into a dynamic,
+          community-driven journey. Built with a modern Next.js frontend and a
+          robust Node.js/Express backend, the application offers an immersive
+          environment where users can discover new books, track their reading
+          progress, and follow their favorite authors through a personalized
+          recommendation engine. The platform distinguishes itself by
+          integrating AI-powered vocabulary tools via OpenAI to enhance
+          comprehension and utilizing Stream Chat for real-time social
+          engagement, all wrapped in a premium, glassmorphic UI that prioritizes
+          visual excellence and seamless user interaction.
         </p>
       </header>
 
-      <main className="max-w-6xl mx-auto space-y-32">
+      <main className="max-w-6xl mx-auto space-y-4">
         {/* Core Concept & Architecture */}
         <section>
-          <div className="space-y-12">
-            <h2 className="font-display text-4xl font-medium tracking-tighter text-white sm:text-5xl lg:text-6xl text-center">
-              <span className="text-white/40">The</span> Ecosystem
-            </h2>
-            <p className="text-lg text-white/70 leading-relaxed max-w-4xl font-sans mx-auto text-center">
-              Reader&apos;s Robin is designed as a reader-first product, split
-              into two standalone high-performance applications: a{" "}
-              <span className="text-white">Next.js 14</span> frontend and an{" "}
-              <span className="text-white">Express + MongoDB</span> backend. It
-              transforms the reading experience from a solitary activity into a
-              social and educational journey.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start mt-32">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-8 items-start mt-1">
             <PhilosophySection
               title="Core Philosophy"
               items={[
@@ -93,12 +90,12 @@ const ReadersRobin = () => {
         </section>
 
         {/* Development Status */}
-        <section className="space-y-12 mt-20">
+        <section className="space-y-6 mt-4">
           <h2 className="font-display text-4xl font-medium tracking-tighter text-white sm:text-5xl lg:text-6xl text-center">
             <span className="text-white/40">Development</span> Status
           </h2>
 
-          <div className="space-y-10">
+          <div className="space-y-6">
             <p className="text-lg text-white/70 leading-relaxed max-w-4xl font-sans mx-auto text-center">
               The app is now a fully developed, production-ready application,
               with a robust backend supporting persistence, validation, seeding,
@@ -106,7 +103,7 @@ const ReadersRobin = () => {
               authentication, onboarding, and profile management.
             </p>
 
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap justify-center gap-3">
               {[
                 "Persistence",
                 "Validation",
@@ -124,7 +121,7 @@ const ReadersRobin = () => {
               ))}
             </div>
 
-            <div className="flex flex-wrap gap-6 pt-4">
+            <div className="flex flex-wrap justify-center gap-6 pt-4">
               <a
                 href="https://reader-s-robin.vercel.app/"
                 target="_blank"
@@ -154,7 +151,7 @@ const ReadersRobin = () => {
         </section>
       </main>
 
-      <footer className="max-w-6xl mx-auto mt-32 pt-12 border-t border-white/5 text-center text-white/20 text-xs font-mono uppercase tracking-[0.2em]">
+      <footer className="max-w-6xl mx-auto mt-20 pt-12 border-t border-white/5 text-center text-white/20 text-xs font-mono uppercase tracking-[0.2em]">
         &copy; {new Date().getFullYear()} Reader&apos;s Robin Case Study
       </footer>
     </div>
