@@ -38,8 +38,8 @@ const Intro = () => {
         <div className="snapshot-section__headline mt-20 mb-20 ">
           <p className="font-display text-[clamp(2.5rem,5.5vw,5rem)] leading-[0.92] tracking-[-0.04em] text-[#f2ede5]">
             Hi, I&apos;m{" "}
-            <span className="text-white/40 italic font-medium">Ishant.</span> I
-            build clean, fast products that make complexity feel{" "}
+            <span className="text-white/40 italic font-medium">Ishant</span>{" "}
+            Sinha! I build clean, fast products that make complexity feel{" "}
             <span className="text-white/40 italic">simple.</span>
           </p>
         </div>
@@ -49,8 +49,9 @@ const Intro = () => {
             Full-stack developer building{" "}
             <span className="text-white/80">scalable</span>,{" "}
             <span className="text-white/80">real-time</span> applications with
-            React, Next.js, and Node.js, with a focus on performance, system
-            design, and AI-powered features.
+            React and Next.js, with a focus on performance, system design, and I
+            have a strong interest in integrating AI-powered features that
+            automate processes, and unlock smarter product behavior.
           </p>
         </div>
       </div>
