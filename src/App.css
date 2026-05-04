@@ -36,6 +36,12 @@
 .floating-resume-pill:hover svg {
   transform: translate(1px, -1px);
 }
+/* Global Cursor Hiding */
+.portfolio-page:has([data-hide-cursor]:hover) .custom-cursor {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
 
 .portfolio-page {
   --page-bg: #090909;

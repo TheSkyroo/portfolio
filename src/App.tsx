@@ -206,12 +206,9 @@ const App = () => {
             </h1>
           </section>
 
-          <hr className="section-divider" />
-
           <section className="snapshot-section" aria-label="Intro snapshot">
             <Intro />
 
-            <hr className="section-divider" />
             <FeatureBento
               onOpenReadersRobin={() => setShowReadersRobin(true)}
               onOpenStreamify={() => setShowStreamify(true)}
