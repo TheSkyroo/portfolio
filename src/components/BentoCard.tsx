@@ -149,6 +149,7 @@ const BentoCard = ({
 
   const showMedia = variant !== "text";
 
+  useEffect(() => {
     const card = cardRef.current;
     if (!card) return;
 
@@ -169,6 +170,7 @@ const BentoCard = ({
       ref={cardRef}
       data-bento-float="true"
       data-hide-cursor="true"
+      onClick={() => onButtonClick?.()}
       className={clsx(
         "group relative h-full overflow-hidden rounded-2xl border shadow-[0_30px_80px_rgba(0,0,0,0.28)] cursor-none",
         "border-white/10 bg-zinc-950",

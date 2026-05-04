@@ -27,8 +27,8 @@ const BentoGrid = ({
     const button = floatingButtonRef.current;
     if (!grid || !button) return;
 
-    const xTo = gsap.quickTo(button, "x", { duration: 0.15, ease: "power3" });
-    const yTo = gsap.quickTo(button, "y", { duration: 0.15, ease: "power3" });
+    const xTo = gsap.quickTo(button, "x", { duration: 0.5, ease: "power3" });
+    const yTo = gsap.quickTo(button, "y", { duration: 0.5, ease: "power3" });
     const opacityTo = gsap.quickTo(button, "opacity", { duration: 0.4, ease: "power2.out" });
 
     gsap.set(button, { xPercent: -50, yPercent: -50, opacity: 0 });
@@ -171,4 +171,4 @@ const BentoGrid = ({
   );
 };
 
-export default BentoGrid;
+export default BentoGrid;
