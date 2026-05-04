@@ -55,10 +55,8 @@ const BentoCard = ({
       !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     const ctx = gsap.context(() => {
-      gsap.set(button, {
+      gsap.set(glossRef.current, {
         opacity: 0,
-        xPercent: -50,
-        yPercent: -50,
       });
 
       if (!allowHoverMotion) {
@@ -194,7 +192,9 @@ const BentoCard = ({
     };
 
     const handleMouseEnter = (e: MouseEvent) => {
-      const { x, y } = getClampedPos(e.clientX, e.clientY);
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
       
       // Instantly set position before showing to avoid jump
       gsap.set(button, { x, y });
@@ -341,6 +341,7 @@ const BentoCard = ({
           }}
           className="pointer-events-auto absolute left-0 top-0 z-50 flex items-center gap-3 rounded-full border border-white/30 bg-white/10 px-7 py-3 text-base font-semibold text-white opacity-0 backdrop-blur-lg shadow-[0_8px_32px_rgba(0,0,0,0.3)] transition-[background-color,color,border-color] duration-300 hover:bg-white hover:text-black active:scale-95"
           style={{
+            transform: "translate(-50%, -50%)",
             willChange: "transform, opacity",
           }}
         >

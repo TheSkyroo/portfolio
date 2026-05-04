@@ -47,9 +47,6 @@ const Iam = ({ words, containerRef }: IamProps) => {
     const button = buttonRef.current;
     if (!container || !button) return;
 
-    // Initial setup to avoid CSS conflict
-    gsap.set(button, { xPercent: -50, yPercent: -50, scale: 0.8 });
-
     // Quick setters for performance (snappy like a real cursor)
     const xTo = gsap.quickTo(button, "x", { duration: 0.15, ease: "power3" });
     const yTo = gsap.quickTo(button, "y", { duration: 0.15, ease: "power3" });
@@ -112,6 +109,7 @@ const Iam = ({ words, containerRef }: IamProps) => {
       ref={buttonRef}
       className="pointer-events-none absolute left-0 top-0 z-50 flex items-center gap-3 rounded-full border border-white/30 bg-white/10 px-7 py-3 text-base font-semibold text-white opacity-0 backdrop-blur-lg shadow-[0_8px_32px_rgba(0,0,0,0.3)] transition-[background-color,color,border-color] duration-300"
       style={{
+        transform: "translate(-50%, -50%) scale(0.8)",
         willChange: "transform, opacity",
       }}
     >
