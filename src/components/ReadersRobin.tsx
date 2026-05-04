@@ -23,10 +23,10 @@ const ReadersRobin = () => {
         {/* Core Concept & Architecture */}
         <section>
           <div className="space-y-12">
-            <h2 className="font-display text-4xl font-medium tracking-tighter text-white sm:text-5xl lg:text-6xl">
+            <h2 className="font-display text-4xl font-medium tracking-tighter text-white sm:text-5xl lg:text-6xl text-center">
               <span className="text-white/40">The</span> Ecosystem
             </h2>
-            <p className="text-lg text-white/70 leading-relaxed max-w-4xl font-sans">
+            <p className="text-lg text-white/70 leading-relaxed max-w-4xl font-sans mx-auto text-center">
               Reader&apos;s Robin is designed as a reader-first product, split
               into two standalone high-performance applications: a{" "}
               <span className="text-white">Next.js 14</span> frontend and an{" "}
@@ -94,12 +94,12 @@ const ReadersRobin = () => {
 
         {/* Development Status */}
         <section className="space-y-12 mt-20">
-          <h2 className="font-display text-4xl font-medium tracking-tighter text-white sm:text-5xl lg:text-6xl">
+          <h2 className="font-display text-4xl font-medium tracking-tighter text-white sm:text-5xl lg:text-6xl text-center">
             <span className="text-white/40">Development</span> Status
           </h2>
 
           <div className="space-y-10">
-            <p className="text-lg text-white/70 leading-relaxed max-w-4xl font-sans">
+            <p className="text-lg text-white/70 leading-relaxed max-w-4xl font-sans mx-auto text-center">
               The app is now a fully developed, production-ready application,
               with a robust backend supporting persistence, validation, seeding,
               and caching, and a seamless frontend experience spanning

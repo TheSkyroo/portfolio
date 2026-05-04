@@ -21,10 +21,10 @@ const Streamify = () => {
         {/* Core Concept & Architecture */}
         <section>
           <div className="space-y-12">
-            <h2 className="font-display text-4xl font-medium tracking-tighter text-white sm:text-5xl lg:text-6xl">
+            <h2 className="font-display text-4xl font-medium tracking-tighter text-white sm:text-5xl lg:text-6xl text-center">
               <span className="text-white/40">The</span> Engine
             </h2>
-            <p className="text-lg text-white/70 leading-relaxed max-w-4xl font-sans">
+            <p className="text-lg text-white/70 leading-relaxed max-w-4xl font-sans mx-auto text-center">
               Streamify is engineered with scalability in mind, utilizing React 19 and the Stream SDK to provide a production-ready communication experience with premium UI/UX.
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12">

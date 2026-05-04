@@ -622,7 +622,7 @@
 }
 
 .feature-bento {
-  grid-column: 2 / -1;
+  grid-column: 1 / -1;
   margin-top: clamp(1.8rem, 4vw, 3rem);
 }
 
@@ -706,7 +706,7 @@
   }
 
   .feature-bento {
-    grid-column: 2;
+    grid-column: 1 / -1;
     margin-top: 1.6rem;
   }
 }
@@ -930,7 +930,7 @@
 
 .detail_Header__text {
   margin: 0;
-  text-align: left;
+  text-align: center;
   font-family: var(--font-display);
   font-size: clamp(2rem, 10vw, 10rem);
   font-weight: 500;
@@ -942,6 +942,8 @@
 
 
 .appDetails-section__copy{
+     text-align: center;
+     margin: 0 auto;
      font-size: 1.02rem;
     line-height: 1.48;
     grid-column: auto;

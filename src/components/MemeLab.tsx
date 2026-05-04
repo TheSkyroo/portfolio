@@ -22,10 +22,10 @@ const MemeLab = () => {
         {/* Core Concept & Architecture */}
         <section>
           <div className="space-y-12">
-            <h2 className="font-display text-4xl font-medium tracking-tighter text-white sm:text-5xl lg:text-6xl">
+            <h2 className="font-display text-4xl font-medium tracking-tighter text-white sm:text-5xl lg:text-6xl text-center">
               <span className="text-white/40">The</span> Engine
             </h2>
-            <p className="text-lg text-white/70 leading-relaxed max-w-4xl font-sans">
+            <p className="text-lg text-white/70 leading-relaxed max-w-4xl font-sans mx-auto text-center">
               Built with Vanilla JavaScript and Google MediaPipe Holistic, Meme
               Lab draws a real-time, futuristic blue wireframe over your body,
               acting as a custom gesture-recognition engine.

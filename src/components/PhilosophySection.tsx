@@ -124,11 +124,11 @@ const PhilosophySection = ({ title, items }: PhilosophySectionProps) => {
     >
       <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.02)_0%,transparent_70%)]" />
 
-      <div className="mb-16">
+      <div className="text-center mb-16">
         <h2 className="font-display text-4xl font-medium tracking-tighter text-white sm:text-5xl lg:text-6xl mb-4">
           <span className="text-white/40">{title.split(' ')[0]}</span> {title.split(' ').slice(1).join(' ')}
         </h2>
-        <p className="font-mono text-[0.6rem] uppercase tracking-[0.3em] text-white/20 flex items-center gap-3">
+        <p className="font-mono text-[0.6rem] uppercase tracking-[0.3em] text-white/20 flex items-center justify-center gap-3">
           Shuffle cards <MoveRight size={10} className="animate-pulse" />
         </p>
       </div>

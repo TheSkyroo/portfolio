@@ -215,9 +215,9 @@ const BentoCard = ({
         className="pointer-events-none absolute inset-0 z-10 bg-[radial-gradient(circle_at_var(--x,50%)_var(--y,50%),rgba(255,255,255,0.12),transparent_40%)]"
       />
 
-      <div className="relative z-20 flex h-full flex-col justify-end p-8 sm:p-12">
+      <div className="relative z-20 flex h-full flex-col p-8 sm:p-12">
         {eyebrow && (
-          <div className="mb-6 flex items-center gap-3">
+          <div className="flex items-center gap-3">
             <span
               ref={badgeRef}
               className="rounded-full border border-white/20 bg-white/10 px-4 py-1.5 font-mono text-[0.65rem] uppercase tracking-[0.2em] text-white/60 backdrop-blur-md"
@@ -227,34 +227,34 @@ const BentoCard = ({
           </div>
         )}
 
+        <h3
+          className={clsx(
+            "max-w-[10ch] text-[2.25rem] leading-[0.9] tracking-[-0.08em] text-white sm:text-[3rem] mt-5",
+            variant === "full" && "max-w-[12ch] text-[2rem] sm:text-[2.6rem]",
+            variant === "text" &&
+              "max-w-[16ch] text-[2.6rem] sm:text-[3.6rem]",
+          )}
+        >
+          {title}
+        </h3>
+
+        <p
+          ref={descriptionRef}
+          className={clsx(
+            "mt-4 max-w-[30rem] text-sm leading-6 tracking-[-0.02em] text-white/78 sm:text-base",
+            variant === "text" && "text-white/88",
+          )}
+        >
+          {description}
+        </p>
+
         <div
           ref={contentRef}
           className={clsx(
-            "transition-all duration-500",
+            "mt-auto transition-all duration-500",
             variant === "text" ? "max-w-[32rem]" : "max-w-[30rem]",
           )}
         >
-          <h3
-            className={clsx(
-              "max-w-[10ch] text-[2.25rem] leading-[0.9] tracking-[-0.08em] text-white sm:text-[3rem]",
-              variant === "full" && "max-w-[12ch] text-[2rem] sm:text-[2.6rem]",
-              variant === "text" &&
-                "max-w-[16ch] text-[2.6rem] sm:text-[3.6rem]",
-            )}
-          >
-            {title}
-          </h3>
-
-          <p
-            ref={descriptionRef}
-            className={clsx(
-              "mt-4 max-w-[30rem] text-sm leading-6 tracking-[-0.02em] text-white/78 sm:text-base",
-              variant === "text" && "text-white/88",
-            )}
-          >
-            {description}
-          </p>
-
           {children ? <div className="mt-5">{children}</div> : null}
         </div>
       </div>
