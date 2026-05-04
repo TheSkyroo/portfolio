@@ -152,12 +152,17 @@ const BentoCard = ({
     if (!card || !button) return;
 
     const xTo = gsap.quickTo(button, "x", {
-      duration: 0.6,
+      duration: 0.1,
       ease: "power3",
     });
     const yTo = gsap.quickTo(button, "y", {
-      duration: 0.6,
+      duration: 0.1,
       ease: "power3",
+    });
+
+    gsap.set(button, {
+      xPercent: -50,
+      yPercent: -50,
     });
     const opacityTo = gsap.quickTo(button, "opacity", {
       duration: 0.4,
@@ -172,8 +177,8 @@ const BentoCard = ({
       const rect = card.getBoundingClientRect();
       const { width, height } = rect;
       
-      let x = clientX - rect.left + 14; // Add offset
-      let y = clientY - rect.top + 14;
+      let x = clientX - rect.left;
+      let y = clientY - rect.top;
 
       const btnRect = button.getBoundingClientRect();
       const halfWidth = btnRect.width / 2;
@@ -193,7 +198,7 @@ const BentoCard = ({
 
     const handleMouseEnter = (e: MouseEvent) => {
       const { x, y } = getClampedPos(e.clientX, e.clientY);
-      gsap.set(button, { x, y }); // Instantly teleport to entry point
+      gsap.set(button, { x, y }); // Move while invisible
       opacityTo(1);
       card.addEventListener("mousemove", handleMouseMove);
     };
@@ -224,8 +229,9 @@ const BentoCard = ({
     <article
       ref={cardRef}
       data-bento-float="true"
+      data-hide-cursor="true"
       className={clsx(
-        "group relative h-full overflow-hidden rounded-2xl border shadow-[0_30px_80px_rgba(0,0,0,0.28)]",
+        "group relative h-full overflow-hidden rounded-2xl border shadow-[0_30px_80px_rgba(0,0,0,0.28)] cursor-none",
         "border-white/10 bg-zinc-950",
         tone === "violet" &&
           "border-violet-300/20 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.18),transparent_30%),linear-gradient(135deg,#7c3aed_0%,#4c1d95_48%,#12051f_100%)]",
@@ -333,7 +339,6 @@ const BentoCard = ({
           }}
           className="pointer-events-auto absolute left-0 top-0 z-50 flex items-center gap-3 rounded-full border border-white/30 bg-white/10 px-7 py-3 text-base font-semibold text-white opacity-0 backdrop-blur-lg shadow-[0_8px_32px_rgba(0,0,0,0.3)] transition-[background-color,color,border-color] duration-300 hover:bg-white hover:text-black active:scale-95"
           style={{
-            transform: "translate(-50%, -50%)",
             willChange: "transform, opacity",
           }}
         >
