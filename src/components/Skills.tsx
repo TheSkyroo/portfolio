@@ -10,48 +10,31 @@ const SKILLS_DATA = [
       "JavaScript (ES6+)",
       "HTML5 / CSS3",
       "TypeScript",
-      "Python / Java",
-      "SQL / NoSQL",
+      "Python",
+      "SQL",
     ],
   },
   {
     category: "Frontend",
-    skills: [
-      "React.js / Next.js",
-      "Tailwind CSS",
-      "GSAP Animations",
-      "Framer Motion",
-      "Redux / Zustand",
-    ],
+    skills: ["GSAP Animations", "Tailwind CSS", "React.js", "Next.js", "Redux"],
   },
   {
     category: "Backend",
     skills: [
-      "Node.js / Express",
-      "RESTful APIs",
+      "Microservices",
       "JWT & Auth.js",
       "WebSockets",
-      "Microservices",
+      "RESTful APIs",
+      "Express",
     ],
   },
   {
     category: "Databases",
-    skills: [
-      "MongoDB / Mongoose",
-      "PostgreSQL / Prisma",
-      "Redis Caching",
-      "Firebase / Supabase",
-    ],
+    skills: ["Redis Caching", "PostgreSQL", "MongoDB", "Firebase", "Docker"],
   },
   {
     category: "Tools & DevOps",
-    skills: [
-      "Git & CI/CD",
-      "Docker / Containers",
-      "AWS / Vercel",
-      "MediaPipe / AI",
-      "Jest / Testing",
-    ],
+    skills: ["Git & CI/CD", "MediaPipe", "Vercel", "AWS", "Jest"],
   },
 ];
 
@@ -70,21 +53,24 @@ const Skills = () => {
     cardsRef.current.forEach((card, i) => {
       if (!card) return;
 
-      let relPos = (i - progress);
+      // Calculate relative position (-2.5 to 2.5 for 5 cards)
+      let relPos = i - progress;
       while (relPos > 2.5) relPos -= total;
       while (relPos < -2.5) relPos += total;
 
       const absPos = Math.abs(relPos);
-      
-      const xOffset = relPos * 100; // Increased spacing for larger cards
+
+      // Positioning and styling
+      const xOffset = relPos * 120;
       const scale = 1 - absPos * 0.15;
       const opacity = Math.max(0, 1 - absPos * 0.45);
       const zIndex = Math.round(100 - absPos * 20);
       const blur = absPos * 2.5;
       const rotateY = relPos * -15;
 
+      // Jump detection for infinite looping
       const currentX = gsap.getProperty(card, "x") as number;
-      if (Math.abs(xOffset - currentX) > 300) {
+      if (Math.abs(xOffset - currentX) > 400) {
         gsap.set(card, { x: xOffset });
       }
 
@@ -98,7 +84,7 @@ const Skills = () => {
         ease: "power2.out",
         overwrite: "auto",
         filter: `blur(${blur}px)`,
-        pointerEvents: "none" // All cards non-interactive now
+        pointerEvents: "none",
       });
     });
 
@@ -161,7 +147,7 @@ const Skills = () => {
   };
 
   return (
-    <section 
+    <section
       ref={sectionRef}
       className="skills-section relative py-32 overflow-hidden min-h-[700px] flex flex-col justify-center select-none"
       id="skills"
@@ -173,13 +159,14 @@ const Skills = () => {
           <span className="text-white/40">Technical</span> Arsenal
         </h2>
         <p className="font-mono text-[0.65rem] uppercase tracking-[0.4em] text-white/20 flex items-center justify-center gap-3">
-          Wheel or drag to shuffle <MoveRight size={12} className="animate-pulse" />
+          Wheel or drag to shuffle{" "}
+          <MoveRight size={12} className="animate-pulse" />
         </p>
       </div>
 
-      <div 
+      <div
         ref={viewportRef}
-        className="relative w-full h-[450px] flex items-center justify-center perspective-2000"
+        className="relative w-full h-[500px] flex items-center justify-center perspective-2000"
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
       >
@@ -187,22 +174,25 @@ const Skills = () => {
           {SKILLS_DATA.map((item, idx) => (
             <div
               key={idx}
-              ref={el => cardsRef.current[idx] = el}
+              ref={(el) => (cardsRef.current[idx] = el)}
               className={clsx(
-                "absolute w-[320px] sm:w-[400px] p-10 rounded-[2.5rem] border border-white/10 bg-zinc-950/80 backdrop-blur-2xl transition-shadow duration-500 shadow-2xl",
-                idx === activeIndex ? "border-white/20" : ""
+                "absolute w-[80vw] sm:w-[42vw] p-12 sm:p-16 rounded-[3rem] border border-white/10 bg-zinc-950/80 backdrop-blur-2xl transition-shadow duration-500 shadow-2xl",
+                idx === activeIndex ? "border-white/20" : "",
               )}
               style={{ transformStyle: "preserve-3d" }}
             >
-              <h3 className="font-mono text-[0.65rem] uppercase tracking-[0.4em] text-white/40 mb-10 text-center">
+              <h3 className="font-mono text-xs uppercase tracking-[0.5em] text-white/30 mb-12 text-center">
                 {item.category}
               </h3>
-              
-              <ul className="space-y-5">
+
+              <ul className="space-y-6 flex flex-col items-center">
                 {item.skills.map((skill, sIdx) => (
-                  <li key={sIdx} className="flex items-center gap-3 text-white/70">
-                    <span className="w-1.5 h-1.5 rounded-full bg-white/20" />
-                    <span className="text-lg font-sans tracking-tight leading-none">
+                  <li
+                    key={sIdx}
+                    className="flex items-center justify-center gap-4 text-white/80 group/item"
+                  >
+                    <span className="w-2 h-2 rounded-full bg-white/20 group-hover/item:bg-white/60 transition-colors" />
+                    <span className="text-2xl sm:text-3xl font-sans tracking-tighter leading-none group-hover/item:text-white transition-colors">
                       {skill}
                     </span>
                   </li>
