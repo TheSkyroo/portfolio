@@ -7,7 +7,17 @@ import BentoTilt from "./BentoTilt";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const BentoGrid = () => {
+const BentoGrid = ({
+  onOpenReadersRobin,
+  onOpenStreamify,
+  onOpenCollegeConnection,
+  onOpenMemeLab,
+}: {
+  onOpenReadersRobin?: () => void;
+  onOpenStreamify?: () => void;
+  onOpenCollegeConnection?: () => void;
+  onOpenMemeLab?: () => void;
+}) => {
   const gridRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -84,24 +94,13 @@ const BentoGrid = () => {
             eyebrow="Social Reading Platform"
             variant="text"
           >
-            <a
-              href="https://reader-s-robin.vercel.app/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-4 mt-7 rounded-full border border-white/18 bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/20"
+            <button
+              onClick={onOpenReadersRobin}
+              className="inline-flex items-center gap-4 ml-2 mt-7 rounded-full border border-white/18 bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/20 cursor-pointer"
             >
-              Visit Site
+              Details
               <ArrowUpRight size={18} strokeWidth={1.8} />
-            </a>
-            <a
-              href="https://github.com/TheSkyroo/reader-s-robin"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-4 ml-2 mt-7 rounded-full border border-white/18 bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/20"
-            >
-              Source Code
-              <ArrowUpRight size={18} strokeWidth={1.8} />
-            </a>
+            </button>
           </BentoCard>
         </BentoTilt>
 
@@ -113,24 +112,13 @@ const BentoGrid = () => {
             eyebrow="Realtime Chat & Video Calls"
             variant="text"
           >
-            <a
-              href="https://streamify-pvt-1.onrender.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-4 mt-7 rounded-full border border-white/18 bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/20"
+            <button
+              onClick={onOpenStreamify}
+              className="inline-flex items-center gap-4 mt-7 rounded-full border border-white/18 bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/20 cursor-pointer"
             >
-              Visit Site
+              Details
               <ArrowUpRight size={18} strokeWidth={1.8} />
-            </a>
-            <a
-              href="https://github.com/TheSkyroo/streamify_PVT"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-4 ml-2 mt-7 rounded-full border border-white/18 bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/20"
-            >
-              Source Code
-              <ArrowUpRight size={18} strokeWidth={1.8} />
-            </a>
+            </button>
           </BentoCard>
         </BentoTilt>
 
@@ -142,24 +130,13 @@ const BentoGrid = () => {
             eyebrow="Academic Network"
             variant="text"
           >
-            <a
-              href="https://college-connection.vercel.app/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-4 mt-7 rounded-full border border-white/18 bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/20"
+            <button
+              onClick={onOpenCollegeConnection}
+              className="inline-flex items-center gap-4 mt-7 rounded-full border border-white/18 bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/20 cursor-pointer"
             >
-              Visit Site
+              Details
               <ArrowUpRight size={18} strokeWidth={1.8} />
-            </a>
-            <a
-              href="https://github.com/Mnkubusb/college_connection"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-4 ml-2 mt-7 rounded-full border border-white/18 bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/20"
-            >
-              Source Code
-              <ArrowUpRight size={18} strokeWidth={1.8} />
-            </a>
+            </button>
           </BentoCard>
         </BentoTilt>
 
@@ -171,24 +148,13 @@ const BentoGrid = () => {
             eyebrow="AI Memes"
             variant="full"
           >
-            <a
-              href="https://fahhhhhhhh.vercel.app/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-4 mt-7 rounded-full border border-white/18 bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/20"
+            <button
+              onClick={onOpenMemeLab}
+              className="inline-flex items-center gap-4 mt-7 rounded-full border border-white/18 bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/20 cursor-pointer"
             >
-              Visit Site
+              Details
               <ArrowUpRight size={18} strokeWidth={1.8} />
-            </a>
-            <a
-              href="https://github.com/TheSkyroo/fahhhhhhhh"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-4 ml-2 mt-7 rounded-full border border-white/18 bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/20"
-            >
-              Source Code
-              <ArrowUpRight size={18} strokeWidth={1.8} />
-            </a>
+            </button>
           </BentoCard>
         </BentoTilt>
       </div>
