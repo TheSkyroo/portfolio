@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { ArrowUpRight, BookOpen, Code, Database, FileText, Globe, Layers, Layout, Link2, Share2, Users } from "lucide-react";
+import PhilosophySection from "./PhilosophySection";
 
 const CollegeConnection = () => {
   useEffect(() => {
@@ -44,24 +45,17 @@ const CollegeConnection = () => {
             </div>
           </div>
 
-          <div className="mt-32 space-y-12">
-            <h2 className="font-display text-4xl font-medium tracking-tighter text-white sm:text-5xl lg:text-6xl">
-              <span className="text-white/40">Core</span> Philosophy
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {[
-                { icon: <Share2 size={20} />, text: "Fostering collaboration through shared semester notes" },
-                { icon: <Link2 size={20} />, text: "Direct social media links for off-platform connection" },
-                { icon: <FileText size={20} />, text: "Easy-to-access academic resource management" },
-                { icon: <Users size={20} />, text: "Simplified profile creation and discovery flow" },
-                { icon: <Layout size={20} />, text: "Clean, intuitive UI built with Tailwind CSS" },
-              ].map((item, i) => (
-                <div key={i} className="flex gap-4 p-6 rounded-xl hover:bg-white/5 transition-all border border-white/5 hover:border-white/10 bg-white/[0.02]">
-                  <span className="text-white/40 mt-1">{item.icon}</span>
-                  <span className="text-white/80 leading-relaxed font-sans">{item.text}</span>
-                </div>
-              ))}
-            </div>
+          <div className="mt-32">
+            <PhilosophySection 
+              title="Core Philosophy"
+              items={[
+                { icon: <Share2 />, text: "Fostering collaboration through shared semester notes" },
+                { icon: <Link2 />, text: "Direct social media links for off-platform connection" },
+                { icon: <FileText />, text: "Easy-to-access academic resource management" },
+                { icon: <Users />, text: "Simplified profile creation and discovery flow" },
+                { icon: <Layout />, text: "Clean, intuitive UI built with Tailwind CSS" },
+              ]}
+            />
           </div>
         </section>
 

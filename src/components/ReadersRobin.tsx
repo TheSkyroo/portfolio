@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { ArrowUpRight, Book, Code, Cpu, Database, Globe, Layers, Layout, Server, Share2, Sparkles, UserCheck } from "lucide-react";
+import PhilosophySection from "./PhilosophySection";
 
 const ReadersRobin = () => {
   useEffect(() => {
@@ -44,24 +45,17 @@ const ReadersRobin = () => {
             </div>
           </div>
 
-          <div className="mt-32 space-y-12">
-            <h2 className="font-display text-4xl font-medium tracking-tighter text-white sm:text-5xl lg:text-6xl">
-              <span className="text-white/40">Core</span> Philosophy
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {[
-                { icon: <UserCheck size={20} />, text: "Personalized onboarding based on genres and authors" },
-                { icon: <Book size={20} />, text: "Discoverable shelf of seeded and imported books" },
-                { icon: <Layout size={20} />, text: "Lightweight tracker: To Read, Reading, Completed" },
-                { icon: <Cpu size={20} />, text: "AI-powered vocabulary scroll adapted to difficulty" },
-                { icon: <Share2 size={20} />, text: "Reader matching and profile privacy systems" },
-              ].map((item, i) => (
-                <div key={i} className="flex gap-4 p-6 rounded-xl hover:bg-white/5 transition-all border border-white/5 hover:border-white/10 bg-white/[0.02]">
-                  <span className="text-white/40 mt-1">{item.icon}</span>
-                  <span className="text-white/80 leading-relaxed font-sans">{item.text}</span>
-                </div>
-              ))}
-            </div>
+          <div className="mt-32">
+            <PhilosophySection 
+              title="Core Philosophy"
+              items={[
+                { icon: <UserCheck />, text: "Personalized onboarding based on genres and authors" },
+                { icon: <Book />, text: "Discoverable shelf of seeded and imported books" },
+                { icon: <Layout />, text: "Lightweight tracker: To Read, Reading, Completed" },
+                { icon: <Cpu />, text: "AI-powered vocabulary scroll adapted to difficulty" },
+                { icon: <Share2 />, text: "Reader matching and profile privacy systems" },
+              ]}
+            />
           </div>
         </section>
 

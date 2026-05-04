@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { ArrowUpRight, Code, Cpu, Globe, Layers, Layout, MessageSquare, Palette, ShieldCheck, Video, Zap } from "lucide-react";
+import PhilosophySection from "./PhilosophySection";
 
 const Streamify = () => {
   useEffect(() => {
@@ -44,24 +45,17 @@ const Streamify = () => {
             </div>
           </div>
 
-          <div className="mt-32 space-y-12">
-            <h2 className="font-display text-4xl font-medium tracking-tighter text-white sm:text-5xl lg:text-6xl">
-              <span className="text-white/40">Core</span> Philosophy
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {[
-                { icon: <ShieldCheck size={20} />, text: "Robust multi-step onboarding flow for secure entry" },
-                { icon: <Palette size={20} />, text: "Dynamic theme engine for personalized experiences" },
-                { icon: <Video size={20} />, text: "Premium UI/UX tailored for high-performance video" },
-                { icon: <MessageSquare size={20} />, text: "Highly scalable messaging architecture" },
-                { icon: <Cpu size={20} />, text: "React 19 optimized for performance and stability" },
-              ].map((item, i) => (
-                <div key={i} className="flex gap-4 p-6 rounded-xl hover:bg-white/5 transition-all border border-white/5 hover:border-white/10 bg-white/[0.02]">
-                  <span className="text-white/40 mt-1">{item.icon}</span>
-                  <span className="text-white/80 leading-relaxed font-sans">{item.text}</span>
-                </div>
-              ))}
-            </div>
+          <div className="mt-32">
+            <PhilosophySection 
+              title="Core Philosophy"
+              items={[
+                { icon: <ShieldCheck />, text: "Robust multi-step onboarding flow for secure entry" },
+                { icon: <Palette />, text: "Dynamic theme engine for personalized experiences" },
+                { icon: <Video />, text: "Premium UI/UX tailored for high-performance video" },
+                { icon: <MessageSquare />, text: "Highly scalable messaging architecture" },
+                { icon: <Cpu />, text: "React 19 optimized for performance and stability" },
+              ]}
+            />
           </div>
         </section>
 
