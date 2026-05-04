@@ -172,8 +172,8 @@ const BentoCard = ({
       const rect = card.getBoundingClientRect();
       const { width, height } = rect;
       
-      let x = clientX - rect.left;
-      let y = clientY - rect.top;
+      let x = clientX - rect.left + 14; // Add offset
+      let y = clientY - rect.top + 14;
 
       const btnRect = button.getBoundingClientRect();
       const halfWidth = btnRect.width / 2;
@@ -192,17 +192,9 @@ const BentoCard = ({
     };
 
     const handleMouseEnter = (e: MouseEvent) => {
-      const rect = card.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      
-      // Instantly set position before showing to avoid jump
-      gsap.set(button, { x, y });
-      xTo(x);
-      yTo(y);
-      
+      const { x, y } = getClampedPos(e.clientX, e.clientY);
+      gsap.set(button, { x, y }); // Instantly teleport to entry point
       opacityTo(1);
-      scaleTo(1);
       card.addEventListener("mousemove", handleMouseMove);
     };
 

@@ -47,9 +47,9 @@ const Iam = ({ words, containerRef }: IamProps) => {
     const button = buttonRef.current;
     if (!container || !button) return;
 
-    // Quick setters for performance (snappy like a real cursor)
-    const xTo = gsap.quickTo(button, "x", { duration: 0.15, ease: "power3" });
-    const yTo = gsap.quickTo(button, "y", { duration: 0.15, ease: "power3" });
+    // Quick setters for performance
+    const xTo = gsap.quickTo(button, "x", { duration: 0.6, ease: "power3" });
+    const yTo = gsap.quickTo(button, "y", { duration: 0.6, ease: "power3" });
     const opacityTo = gsap.quickTo(button, "opacity", { duration: 0.4, ease: "power2.out" });
     const scaleTo = gsap.quickTo(button, "scale", { duration: 0.4, ease: "power3.out" });
 
@@ -71,28 +71,17 @@ const Iam = ({ words, containerRef }: IamProps) => {
       };
     };
 
-    let wasInside = false;
     const handleMouseMove = (e: MouseEvent) => {
       const { x, y, isInside } = getClampedPos(e.clientX, e.clientY);
       
       if (isInside) {
-        if (!wasInside) {
-          // Instantly teleport to cursor on first entry to avoid jumping from (0,0)
-          gsap.set(button, { x, y });
-          xTo(x);
-          yTo(y);
-          wasInside = true;
-        }
         xTo(x);
         yTo(y);
         opacityTo(1);
         scaleTo(1);
       } else {
-        if (wasInside) {
-          wasInside = false;
-          opacityTo(0);
-          scaleTo(0.8);
-        }
+        opacityTo(0);
+        scaleTo(0.8);
       }
     };
 
