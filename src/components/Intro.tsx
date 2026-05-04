@@ -10,8 +10,8 @@ const IAM_QUOTES = [
   "I am the one who knocks.",
   "I am the algorithm.",
   "I am Thor, son of Odin!",
-  "I am Light Yagami… the god of this new world.",
-  "I am Monkey D. Luffy, and I’m gonna be King of the Pirates!",
+  "I am Light Yagami…",
+  "I am Monkey D. Luffy!",
   "I am Kratos.",
 ];
 
