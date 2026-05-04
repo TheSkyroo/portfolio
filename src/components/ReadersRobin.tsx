@@ -11,9 +11,9 @@ const ReadersRobin = () => {
     <div className="min-h-screen bg-[#090909] text-[#f2ede5] p-6 md:p-12 lg:p-20 font-sans selection:bg-white/10 selection:text-white">
       {/* Header Section */}
       <header className="max-w-6xl mx-auto mb-4 space-y-6">
-        <h2 className="font-display text-4xl font-medium tracking-tighter text-white sm:text-5xl lg:text-6xl text-center">
+        <h1 className="font-display text-6xl font-medium tracking-tighter text-white sm:text-7xl lg:text-8xl text-center">
           <span className="text-white/40">Reader&apos;s</span> Robin
-        </h2>
+        </h1>
 
         <p className="appDetails-section__copy mt-5 text-center">
           Reader&apos;s Robin is a full-stack social reading platform designed
