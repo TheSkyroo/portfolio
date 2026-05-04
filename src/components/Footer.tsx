@@ -35,7 +35,7 @@ const Footer = ({ className }: { className?: string }) => {
   return (
     <footer 
       ref={footerRef}
-      data-hide-cursor={!hoveredLabel}
+      data-hide-cursor="true"
       className={`relative flex flex-col items-center justify-center pt-14 pb-12 w-full cursor-none ${className || ""}`}
     >
       <FooterDetail isVisible={!hoveredLabel} containerRef={footerRef} />
@@ -62,9 +62,7 @@ const Footer = ({ className }: { className?: string }) => {
 
       <div className="w-full overflow-hidden text-center">
         <h2 
-          onMouseEnter={() => setHoveredLabel("Contact")}
-          onMouseLeave={() => setHoveredLabel(null)}
-          className="font-display mb-6 text-[clamp(2.5rem,10vw,8rem)] leading-none text-white/90 selection:bg-white/20 cursor-none"
+          className="font-display mb-6 text-[clamp(2.5rem,10vw,8rem)] leading-none text-white/90 selection:bg-white/20"
         >
           ishaant69@gmail.com
         </h2>

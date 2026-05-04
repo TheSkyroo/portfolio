@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 
 interface FooterDetailProps {
-  isVisible: boolean; // Renamed from label to reflect new logic
+  isVisible: boolean; // true for text mode, false for circle mode
   containerRef: React.RefObject<HTMLElement | null>;
 }
 
@@ -32,13 +32,12 @@ const FooterDetail = ({ isVisible, containerRef }: FooterDetailProps) => {
   const textRef = useRef<HTMLSpanElement>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // 1. Text Cycler (Slide + Fade) - inspired by Iam.tsx
+  // 1. Text Cycler
   useEffect(() => {
-    if (!isVisible) return;
-
     const interval = setInterval(() => {
-      const tl = gsap.timeline();
+      if (!isVisible) return;
 
+      const tl = gsap.timeline();
       tl.to(textRef.current, {
         opacity: 0,
         y: -10,
@@ -49,7 +48,6 @@ const FooterDetail = ({ isVisible, containerRef }: FooterDetailProps) => {
           gsap.set(textRef.current, { y: 10 });
         },
       });
-
       tl.to(textRef.current, {
         opacity: 1,
         y: 0,
@@ -61,7 +59,7 @@ const FooterDetail = ({ isVisible, containerRef }: FooterDetailProps) => {
     return () => clearInterval(interval);
   }, [isVisible]);
 
-  // 2. High-performance Mouse Follower
+  // 2. High-performance Mouse Follower & Shape Morph
   useEffect(() => {
     const container = containerRef.current;
     const detail = detailRef.current;
@@ -69,24 +67,13 @@ const FooterDetail = ({ isVisible, containerRef }: FooterDetailProps) => {
 
     const xTo = gsap.quickTo(detail, "x", { duration: 0.6, ease: "power3" });
     const yTo = gsap.quickTo(detail, "y", { duration: 0.6, ease: "power3" });
-    const opacityTo = gsap.quickTo(detail, "opacity", {
-      duration: 0.4,
-      ease: "power2.out",
-    });
-    const scaleTo = gsap.quickTo(detail, "scale", {
-      duration: 0.4,
-      ease: "power3.out",
-    });
 
-    gsap.set(detail, { xPercent: -50, yPercent: -50, opacity: 0, scale: 0.8 });
+    gsap.set(detail, { xPercent: -50, yPercent: -50, opacity: 0 });
 
     const handleMouseMove = (e: MouseEvent) => {
       const rect = container.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-
-      xTo(x);
-      yTo(y);
+      xTo(e.clientX - rect.left);
+      yTo(e.clientY - rect.top);
 
       const isInside =
         e.clientX >= rect.left &&
@@ -94,36 +81,72 @@ const FooterDetail = ({ isVisible, containerRef }: FooterDetailProps) => {
         e.clientY >= rect.top &&
         e.clientY <= rect.bottom;
 
-      if (isInside && isVisible) {
-        opacityTo(1);
-        scaleTo(1);
+      if (isInside) {
+        gsap.to(detail, { opacity: 1, scale: 1, duration: 0.3 });
       } else {
-        opacityTo(0);
-        scaleTo(0.8);
+        gsap.to(detail, { opacity: 0, scale: 0.8, duration: 0.3 });
       }
     };
 
     window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, [containerRef]);
 
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-    };
-  }, [containerRef, isVisible]);
+  // 3. Morph animation when isVisible changes
+  useEffect(() => {
+    const detail = detailRef.current;
+    if (!detail) return;
+
+    if (isVisible) {
+      // Morph to Pill
+      gsap.to(detail, {
+        width: "auto",
+        height: "auto",
+        borderRadius: "999px",
+        backgroundColor: "rgba(255, 255, 255, 1)",
+        borderWidth: "1px",
+        padding: "1rem 2.25rem",
+        duration: 0.4,
+        ease: "power3.out",
+      });
+    } else {
+      // Morph to Circle
+      gsap.to(detail, {
+        width: "20px",
+        height: "20px",
+        borderRadius: "50%",
+        backgroundColor: "rgba(255, 255, 255, 0.9)",
+        borderWidth: "1px",
+        padding: "0",
+        duration: 0.4,
+        ease: "power3.out",
+      });
+    }
+  }, [isVisible]);
 
   return (
     <div
       ref={detailRef}
-      className="pointer-events-none absolute left-0 top-0 z-50 flex items-center gap-3 rounded-full font-bold border border-white bg-white px-9 py-4 text-base font-sans text-black opacity-0 backdrop-blur-lg shadow-[0_8px_32px_rgba(0,0,0,0.3)] transition-[background-color,color,border-color] duration-300 hover:bg-white hover:text-black active:scale-95"
-      style={{ willChange: "transform, opacity" }}
+      className="pointer-events-none absolute left-0 top-0 z-50 flex items-center justify-center border-white text-black shadow-[0_8px_32px_rgba(0,0,0,0.3)] transition-colors duration-300"
+      style={{ 
+        willChange: "transform, opacity, width, height, border-radius",
+        overflow: "hidden"
+      }}
     >
-      <span
-        ref={textRef}
-        className="whitespace-nowrap tracking-tight inline-block"
+      <div 
+        className="flex items-center justify-center"
+        style={{ opacity: isVisible ? 1 : 0, transition: "opacity 0.2s" }}
       >
-        {FOOTER_WORDS[currentIndex]}
-      </span>
+        <span
+          ref={textRef}
+          className="whitespace-nowrap text-base font-bold tracking-tight font-sans"
+        >
+          {FOOTER_WORDS[currentIndex]}
+        </span>
+      </div>
     </div>
   );
 };
 
 export default FooterDetail;
+
