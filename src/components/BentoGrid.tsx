@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ArrowUpRight } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -19,31 +19,53 @@ const BentoGrid = ({
   onOpenMemeLab?: () => void;
 }) => {
   const gridRef = useRef<HTMLDivElement>(null);
+  const floatingButtonRef = useRef<HTMLButtonElement>(null);
+  const [hoveredInfo, setHoveredInfo] = useState<{ label: string; onClick?: () => void } | null>(null);
 
   useEffect(() => {
     const grid = gridRef.current;
-    if (!grid) {
-      return;
+    const button = floatingButtonRef.current;
+    if (!grid || !button) return;
+
+    const xTo = gsap.quickTo(button, "x", { duration: 0.15, ease: "power3" });
+    const yTo = gsap.quickTo(button, "y", { duration: 0.15, ease: "power3" });
+    const opacityTo = gsap.quickTo(button, "opacity", { duration: 0.4, ease: "power2.out" });
+
+    gsap.set(button, { xPercent: -50, yPercent: -50, opacity: 0 });
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const rect = grid.getBoundingClientRect();
+      xTo(e.clientX - rect.left);
+      yTo(e.clientY - rect.top);
+    };
+
+    grid.addEventListener("mousemove", handleMouseMove);
+
+    if (hoveredInfo) {
+      opacityTo(1);
+    } else {
+      opacityTo(0);
     }
+
+    return () => {
+      grid.removeEventListener("mousemove", handleMouseMove);
+    };
+  }, [hoveredInfo]);
+
+  useEffect(() => {
+    const grid = gridRef.current;
+    if (!grid) return;
 
     const ctx = gsap.context(() => {
       const items = gsap.utils.toArray<HTMLElement>(".bento-grid__item", grid);
-      const reduceMotion = window.matchMedia(
-        "(prefers-reduced-motion: reduce)",
-      ).matches;
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
       if (reduceMotion) {
-        gsap.set(items, {
-          opacity: 1,
-          y: 0,
-        });
+        gsap.set(items, { opacity: 1, y: 0 });
         return;
       }
 
-      gsap.set(items, {
-        opacity: 0,
-        y: 56,
-      });
+      gsap.set(items, { opacity: 0, y: 56 });
 
       gsap.to(items, {
         opacity: 1,
@@ -56,19 +78,6 @@ const BentoGrid = ({
           start: "top 78%",
           once: true,
         },
-      });
-
-      items.forEach((item, index) => {
-        const floatingNode =
-          item.querySelector<HTMLElement>("[data-bento-float='true']") ?? item;
-
-        gsap.to(floatingNode, {
-          y: index % 2 === 0 ? -8 : 8,
-          duration: 3.2 + index * 0.3,
-          ease: "sine.inOut",
-          repeat: -1,
-          yoyo: true,
-        });
       });
     }, gridRef);
 
@@ -84,7 +93,7 @@ const BentoGrid = ({
       </div>
       <div
         ref={gridRef}
-        className="grid h-auto w-full grid-cols-1 gap-5 sm:gap-6 lg:grid-cols-2"
+        className="relative grid h-auto w-full grid-cols-1 gap-5 sm:gap-6 lg:grid-cols-2"
       >
         <BentoTilt className="min-h-[32rem] sm:min-h-[32rem]">
           <BentoCard
@@ -95,6 +104,8 @@ const BentoGrid = ({
             variant="text"
             buttonLabel="Details"
             onButtonClick={onOpenReadersRobin}
+            onMouseEnter={() => setHoveredInfo({ label: "Details", onClick: onOpenReadersRobin })}
+            onMouseLeave={() => setHoveredInfo(null)}
           />
         </BentoTilt>
 
@@ -107,6 +118,8 @@ const BentoGrid = ({
             variant="text"
             buttonLabel="Details"
             onButtonClick={onOpenStreamify}
+            onMouseEnter={() => setHoveredInfo({ label: "Details", onClick: onOpenStreamify })}
+            onMouseLeave={() => setHoveredInfo(null)}
           />
         </BentoTilt>
 
@@ -119,6 +132,8 @@ const BentoGrid = ({
             variant="text"
             buttonLabel="Details"
             onButtonClick={onOpenCollegeConnection}
+            onMouseEnter={() => setHoveredInfo({ label: "Details", onClick: onOpenCollegeConnection })}
+            onMouseLeave={() => setHoveredInfo(null)}
           />
         </BentoTilt>
 
@@ -131,11 +146,29 @@ const BentoGrid = ({
             variant="full"
             buttonLabel="Details"
             onButtonClick={onOpenMemeLab}
+            onMouseEnter={() => setHoveredInfo({ label: "Details", onClick: onOpenMemeLab })}
+            onMouseLeave={() => setHoveredInfo(null)}
           />
         </BentoTilt>
+
+        {/* Global Floating Button for the Grid */}
+        <button
+          ref={floatingButtonRef}
+          onClick={(e) => {
+            e.stopPropagation();
+            hoveredInfo?.onClick?.();
+          }}
+          className="pointer-events-none absolute left-0 top-0 z-50 flex items-center gap-3 rounded-full border border-white/30 bg-white/10 px-7 py-3 text-base font-semibold text-white opacity-0 backdrop-blur-lg shadow-[0_8px_32px_rgba(0,0,0,0.3)] transition-[background-color,color,border-color] duration-300 hover:bg-white hover:text-black active:scale-95"
+          style={{ willChange: "transform, opacity" }}
+        >
+          <span className="whitespace-nowrap tracking-tight">{hoveredInfo?.label || "Details"}</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M7 17L17 7M17 7H7M17 7V17" />
+          </svg>
+        </button>
       </div>
     </section>
   );
 };
 
-export default BentoGrid;
+export default BentoGrid;

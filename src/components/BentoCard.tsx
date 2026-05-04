@@ -19,6 +19,8 @@ interface BentoCardProps {
   children?: ReactNode;
   onButtonClick?: () => void;
   buttonLabel?: string;
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
 }
 
 const BentoCard = ({
@@ -34,9 +36,10 @@ const BentoCard = ({
   children,
   onButtonClick,
   buttonLabel,
+  onMouseEnter,
+  onMouseLeave,
 }: BentoCardProps) => {
   const cardRef = useRef<HTMLElement>(null);
-  const floatingButtonRef = useRef<HTMLButtonElement>(null);
   const mediaRef = useRef<HTMLVideoElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const descriptionRef = useRef<HTMLParagraphElement>(null);
@@ -146,84 +149,20 @@ const BentoCard = ({
 
   const showMedia = variant !== "text";
 
-  useEffect(() => {
     const card = cardRef.current;
-    const button = floatingButtonRef.current;
-    if (!card || !button) return;
+    if (!card) return;
 
-    const xTo = gsap.quickTo(button, "x", {
-      duration: 0.1,
-      ease: "power3",
-    });
-    const yTo = gsap.quickTo(button, "y", {
-      duration: 0.1,
-      ease: "power3",
-    });
-
-    gsap.set(button, {
-      xPercent: -50,
-      yPercent: -50,
-    });
-    const opacityTo = gsap.quickTo(button, "opacity", {
-      duration: 0.4,
-      ease: "power2.out",
-    });
-    const scaleTo = gsap.quickTo(button, "scale", {
-      duration: 0.3,
-      ease: "power3.out",
-    });
-
-    const getClampedPos = (clientX: number, clientY: number) => {
-      const rect = card.getBoundingClientRect();
-      const { width, height } = rect;
-      
-      let x = clientX - rect.left;
-      let y = clientY - rect.top;
-
-      const btnRect = button.getBoundingClientRect();
-      const halfWidth = btnRect.width / 2;
-      const halfHeight = btnRect.height / 2;
-
-      return {
-        x: Math.max(halfWidth, Math.min(width - halfWidth, x)),
-        y: Math.max(halfHeight, Math.min(height - halfHeight, y)),
-      };
-    };
-
-    const handleMouseMove = (e: MouseEvent) => {
-      const { x, y } = getClampedPos(e.clientX, e.clientY);
-      xTo(x);
-      yTo(y);
-    };
-
-    const handleMouseEnter = (e: MouseEvent) => {
-      const { x, y } = getClampedPos(e.clientX, e.clientY);
-      gsap.set(button, { x, y }); // Move while invisible
-      opacityTo(1);
-      card.addEventListener("mousemove", handleMouseMove);
-    };
-
-    const handleMouseLeave = () => {
-      opacityTo(0);
-      card.removeEventListener("mousemove", handleMouseMove);
-    };
-
-    const handleButtonMouseEnter = () => scaleTo(1.1);
-    const handleButtonMouseLeave = () => scaleTo(1);
+    const handleMouseEnter = () => onMouseEnter?.();
+    const handleMouseLeave = () => onMouseLeave?.();
 
     card.addEventListener("mouseenter", handleMouseEnter);
     card.addEventListener("mouseleave", handleMouseLeave);
-    button.addEventListener("mouseenter", handleButtonMouseEnter);
-    button.addEventListener("mouseleave", handleButtonMouseLeave);
 
     return () => {
       card.removeEventListener("mouseenter", handleMouseEnter);
       card.removeEventListener("mouseleave", handleMouseLeave);
-      card.removeEventListener("mousemove", handleMouseMove);
-      button.removeEventListener("mouseenter", handleButtonMouseEnter);
-      button.removeEventListener("mouseleave", handleButtonMouseLeave);
     };
-  }, [buttonLabel]);
+  }, [onMouseEnter, onMouseLeave]);
 
   return (
     <article
@@ -254,54 +193,42 @@ const BentoCard = ({
 
           <video
             ref={mediaRef}
-            className={clsx(
-              "absolute inset-0 h-full w-full object-cover scale-[1.03]",
-              videoFailed ? "opacity-0" : "opacity-100",
-            )}
             src={src}
-            autoPlay
             loop
             muted
+            autoPlay
             playsInline
-            preload="metadata"
+            onCanPlay={() => setVideoFailed(false)}
             onError={() => setVideoFailed(true)}
+            className="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100"
           />
-
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.12),transparent_28%),linear-gradient(180deg,rgba(9,9,11,0.08)_0%,rgba(9,9,11,0.36)_36%,rgba(9,9,11,0.92)_100%)]" />
         </div>
       ) : (
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.08),transparent_24%),radial-gradient(circle_at_80%_0%,rgba(255,255,255,0.03),transparent_30%)]" />
+        <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-50" />
       )}
 
+      {/* Glass overlay */}
       <div
         ref={glossRef}
-        className="pointer-events-none absolute inset-0 bg-white/8 backdrop-blur-[2px]"
+        className="pointer-events-none absolute inset-0 z-10 bg-[radial-gradient(circle_at_var(--x,50%)_var(--y,50%),rgba(255,255,255,0.12),transparent_40%)]"
       />
 
-      <div className="relative z-10 flex h-full flex-col justify-between p-5 sm:p-6">
-        <div className="flex items-start justify-between gap-3">
-          <div className="flex flex-wrap items-center gap-2">
-            {eyebrow ? (
-              <span className="rounded-full border border-white/12 bg-white/6 px-3 py-1 text-[0.65rem] font-medium uppercase tracking-[0.24em] text-white/70">
-                {eyebrow}
-              </span>
-            ) : null}
-          </div>
-
-          {isComingSoon ? (
+      <div className="relative z-20 flex h-full flex-col justify-end p-8 sm:p-12">
+        {eyebrow && (
+          <div className="mb-6 flex items-center gap-3">
             <span
               ref={badgeRef}
-              className="rounded-full border border-emerald-300/25 bg-emerald-300/10 px-3 py-1 text-[0.65rem] font-medium uppercase tracking-[0.2em] text-emerald-200"
+              className="rounded-full border border-white/20 bg-white/10 px-4 py-1.5 font-mono text-[0.65rem] uppercase tracking-[0.2em] text-white/60 backdrop-blur-md"
             >
-              Coming Soon
+              {eyebrow}
             </span>
-          ) : null}
-        </div>
+          </div>
+        )}
 
         <div
           ref={contentRef}
           className={clsx(
-            "relative mt-auto",
+            "transition-all duration-500",
             variant === "text" ? "max-w-[32rem]" : "max-w-[30rem]",
           )}
         >
@@ -329,38 +256,8 @@ const BentoCard = ({
           {children ? <div className="mt-5">{children}</div> : null}
         </div>
       </div>
-
-      {buttonLabel && (
-        <button
-          ref={floatingButtonRef}
-          onClick={(e) => {
-            e.stopPropagation();
-            onButtonClick?.();
-          }}
-          className="pointer-events-auto absolute left-0 top-0 z-50 flex items-center gap-3 rounded-full border border-white/30 bg-white/10 px-7 py-3 text-base font-semibold text-white opacity-0 backdrop-blur-lg shadow-[0_8px_32px_rgba(0,0,0,0.3)] transition-[background-color,color,border-color] duration-300 hover:bg-white hover:text-black active:scale-95"
-          style={{
-            willChange: "transform, opacity",
-          }}
-        >
-          <span className="whitespace-nowrap tracking-tight">{buttonLabel}</span>
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="3"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M7 17L17 7M17 7H7M17 7V17" />
-          </svg>
-        </button>
-      )}
     </article>
   );
 };
-
-
 
 export default BentoCard;
