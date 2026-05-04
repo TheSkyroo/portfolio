@@ -17,6 +17,8 @@ interface BentoCardProps {
   tone?: BentoCardTone;
   className?: string;
   children?: ReactNode;
+  onButtonClick?: () => void;
+  buttonLabel?: string;
 }
 
 const BentoCard = ({
@@ -30,8 +32,11 @@ const BentoCard = ({
   tone = "neutral",
   className,
   children,
+  onButtonClick,
+  buttonLabel,
 }: BentoCardProps) => {
   const cardRef = useRef<HTMLElement>(null);
+  const floatingButtonRef = useRef<HTMLButtonElement>(null);
   const mediaRef = useRef<HTMLVideoElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const descriptionRef = useRef<HTMLParagraphElement>(null);
@@ -141,6 +146,81 @@ const BentoCard = ({
 
   const showMedia = variant !== "text";
 
+  useEffect(() => {
+    const card = cardRef.current;
+    const button = floatingButtonRef.current;
+    if (!card || !button) return;
+
+    const xTo = gsap.quickTo(button, "x", {
+      duration: 0.6,
+      ease: "power3",
+    });
+    const yTo = gsap.quickTo(button, "y", {
+      duration: 0.6,
+      ease: "power3",
+    });
+    const opacityTo = gsap.quickTo(button, "opacity", {
+      duration: 0.4,
+      ease: "power2.out",
+    });
+    const scaleTo = gsap.quickTo(button, "scale", {
+      duration: 0.3,
+      ease: "power3.out",
+    });
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const rect = card.getBoundingClientRect();
+      const { width, height } = rect;
+      
+      // Calculate position relative to card
+      let x = e.clientX - rect.left;
+      let y = e.clientY - rect.top;
+
+      // Add a slight offset so it doesn't overlap the pointer
+      const offset = 14;
+      x += offset;
+      y += offset;
+
+      // Constrain within boundaries
+      const btnRect = button.getBoundingClientRect();
+      const halfWidth = btnRect.width / 2;
+      const halfHeight = btnRect.height / 2;
+
+      // Clamp x and y to keep button inside
+      x = Math.max(halfWidth, Math.min(width - halfWidth, x));
+      y = Math.max(halfHeight, Math.min(height - halfHeight, y));
+
+      xTo(x);
+      yTo(y);
+    };
+
+    const handleMouseEnter = () => {
+      opacityTo(1);
+      card.addEventListener("mousemove", handleMouseMove);
+    };
+
+    const handleMouseLeave = () => {
+      opacityTo(0);
+      card.removeEventListener("mousemove", handleMouseMove);
+    };
+
+    const handleButtonMouseEnter = () => scaleTo(1.1);
+    const handleButtonMouseLeave = () => scaleTo(1);
+
+    card.addEventListener("mouseenter", handleMouseEnter);
+    card.addEventListener("mouseleave", handleMouseLeave);
+    button.addEventListener("mouseenter", handleButtonMouseEnter);
+    button.addEventListener("mouseleave", handleButtonMouseLeave);
+
+    return () => {
+      card.removeEventListener("mouseenter", handleMouseEnter);
+      card.removeEventListener("mouseleave", handleMouseLeave);
+      card.removeEventListener("mousemove", handleMouseMove);
+      button.removeEventListener("mouseenter", handleButtonMouseEnter);
+      button.removeEventListener("mouseleave", handleButtonMouseLeave);
+    };
+  }, [buttonLabel]);
+
   return (
     <article
       ref={cardRef}
@@ -244,6 +324,35 @@ const BentoCard = ({
           {children ? <div className="mt-5">{children}</div> : null}
         </div>
       </div>
+
+      {buttonLabel && (
+        <button
+          ref={floatingButtonRef}
+          onClick={(e) => {
+            e.stopPropagation();
+            onButtonClick?.();
+          }}
+          className="pointer-events-auto absolute left-0 top-0 z-50 flex items-center gap-3 rounded-full border border-white/30 bg-white/10 px-7 py-3 text-base font-semibold text-white opacity-0 backdrop-blur-lg shadow-[0_8px_32px_rgba(0,0,0,0.3)] transition-[background-color,color,border-color] duration-300 hover:bg-white hover:text-black active:scale-95"
+          style={{
+            transform: "translate(-50%, -50%)",
+            willChange: "transform, opacity",
+          }}
+        >
+          <span className="whitespace-nowrap tracking-tight">{buttonLabel}</span>
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M7 17L17 7M17 7H7M17 7V17" />
+          </svg>
+        </button>
+      )}
     </article>
   );
 };
