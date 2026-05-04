@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { ArrowUpRight, Camera, Code, Cpu, Eye, Hand, Layers, Layout, Monitor, Sparkles, User } from "lucide-react";
+import PhilosophySection from "./PhilosophySection";
 
 const MemeLab = () => {
   useEffect(() => {
@@ -53,44 +54,17 @@ const MemeLab = () => {
             </div>
           </div>
 
-          <div className="mt-32 space-y-12">
-            <h2 className="font-display text-4xl font-medium tracking-tighter text-white sm:text-5xl lg:text-6xl">
-              <span className="text-white/40">Core</span> Philosophy
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {[
-                {
-                  icon: <User size={20} />,
-                  text: "Full body landmark tracking for expressive interaction",
-                },
-                {
-                  icon: <Hand size={20} />,
-                  text: "Precise finger-point and gesture detection",
-                },
-                {
-                  icon: <Monitor size={20} />,
-                  text: "Futuristic blue wireframe overlay visualization",
-                },
-                {
-                  icon: <Layout size={20} />,
-                  text: "Instant meme image injection based on triggers",
-                },
-                {
-                  icon: <Cpu size={20} />,
-                  text: "Lightweight, zero-framework Vanilla JS implementation",
-                },
-              ].map((item, i) => (
-                <div
-                  key={i}
-                  className="flex gap-4 p-6 rounded-xl hover:bg-white/5 transition-all border border-white/5 hover:border-white/10 bg-white/[0.02]"
-                >
-                  <span className="text-white/40 mt-1">{item.icon}</span>
-                  <span className="text-white/80 leading-relaxed font-sans">
-                    {item.text}
-                  </span>
-                </div>
-              ))}
-            </div>
+          <div className="mt-32">
+            <PhilosophySection 
+              title="Core Philosophy"
+              items={[
+                { icon: <User />, text: "Full body landmark tracking for expressive interaction" },
+                { icon: <Hand />, text: "Precise finger-point and gesture detection" },
+                { icon: <Monitor />, text: "Futuristic blue wireframe overlay visualization" },
+                { icon: <Layout />, text: "Instant meme image injection based on triggers" },
+                { icon: <Cpu />, text: "Lightweight, zero-framework Vanilla JS implementation" },
+              ]}
+            />
           </div>
         </section>
 

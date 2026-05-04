@@ -24,51 +24,6 @@ const PhilosophySection = ({ title, items }: PhilosophySectionProps) => {
 
   const updateCardPositions = useCallback((progress: number) => {
     const total = items.length;
-    
-    cardsRef.current.forEach((card, i) => {
-      if (!card) return;
-
-      // Calculate relative position
-      let relPos = i - progress;
-      while (relPos > total / 2) relPos -= total;
-      while (relPos < -total / 2) relPos += total;
-
-      const absPos = Math.abs(relPos);
-
-      // Positioning and styling
-      const xOffset = relPos * 120;
-      const scale = 1 - absPos * 0.15;
-      const opacity = Math.max(0, 1 - absPos * 0.45);
-      const zIndex = Math.round(100 - absPos * 20);
-      const blur = absPos * 2.5;
-      const rotateY = relPos * -15;
-
-      // Jump detection for infinite looping
-      const currentX = gsap.getProperty(card, "x") as number;
-      if (Math.abs(xOffset - currentX) > 400) {
-        gsap.set(card, { x: xOffset });
-      }
-
-      gsap.to(card, {
-        x: xOffset,
-        scale: scale,
-        opacity: opacity,
-        zIndex: zIndex,
-        rotateY: rotateY,
-        duration: 0.5,
-        ease: "power2.out",
-        overwrite: "auto",
-        filter: `blur(${blur}px)`,
-        pointerEvents: idx === activeIndex ? "auto" : "none",
-      });
-    });
-
-    // We need 'idx' inside the loop, so I'll move the pointerEvents logic.
-  }, [items.length]);
-
-  // Fixed updateCardPositions to include i in the loop for active index check
-  const updateCardPositionsFixed = useCallback((progress: number) => {
-    const total = items.length;
     const wrappedActive = Math.round(progress % total + total) % total;
     setActiveIndex(wrappedActive);
 
@@ -113,48 +68,31 @@ const PhilosophySection = ({ title, items }: PhilosophySectionProps) => {
     
     isAnimatingRef.current = true;
     progressRef.current += direction;
-    updateCardPositionsFixed(progressRef.current);
+    updateCardPositions(progressRef.current);
 
     gsap.delayedCall(0.5, () => {
       isAnimatingRef.current = false;
     });
-  }, [updateCardPositionsFixed]);
+  }, [updateCardPositions]);
 
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
 
     const handleWheel = (e: WheelEvent) => {
-      // Only prevent default if we're actually scrolling the section horizontally
-      // But Skills.tsx prevents it to capture the gesture.
-      if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
-        e.preventDefault();
-        const delta = e.deltaX;
-        if (Math.abs(delta) < 20) return;
-        move(delta > 0 ? 1 : -1);
-      } else if (Math.abs(e.deltaY) > 50) {
-         // Optionally capture vertical scroll too if desired, but Skills captures both.
-         // Let's stick to Skills behavior for consistency.
-         // e.preventDefault(); 
-         // move(e.deltaY > 0 ? 1 : -1);
-      }
-    };
-
-    // To match Skills.tsx exactly:
-    const handleWheelFull = (e: WheelEvent) => {
       e.preventDefault();
       const delta = e.deltaY || e.deltaX;
       if (Math.abs(delta) < 40) return;
       move(delta > 0 ? 1 : -1);
     };
 
-    section.addEventListener("wheel", handleWheelFull, { passive: false });
-    updateCardPositionsFixed(0);
+    section.addEventListener("wheel", handleWheel, { passive: false });
+    updateCardPositions(0);
     
     return () => {
-      section.removeEventListener("wheel", handleWheelFull);
+      section.removeEventListener("wheel", handleWheel);
     };
-  }, [move, updateCardPositionsFixed]);
+  }, [move, updateCardPositions]);
 
   const dragStartRef = useRef(0);
   const dragAccumulatorRef = useRef(0);
@@ -208,7 +146,7 @@ const PhilosophySection = ({ title, items }: PhilosophySectionProps) => {
               ref={(el) => (cardsRef.current[idx] = el)}
               className={clsx(
                 "absolute w-[85vw] sm:w-[350px] p-10 rounded-[2.5rem] border border-white/10 bg-zinc-950/90 backdrop-blur-xl transition-shadow duration-500 shadow-2xl flex flex-col items-center justify-center text-center",
-                idx === activeIndex ? "border-white/20" : "opacity-0",
+                idx === activeIndex ? "border-white/20" : "",
               )}
               style={{ transformStyle: "preserve-3d" }}
             >

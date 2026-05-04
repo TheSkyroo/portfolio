@@ -11,6 +11,7 @@ import ReadersRobin from "./components/ReadersRobin";
 import Streamify from "./components/Streamify";
 import CollegeConnection from "./components/CollegeConnection";
 import MemeLab from "./components/MemeLab";
+import Intro from "./components/Intro";
 import "./App.css";
 
 const App = () => {
@@ -115,7 +116,10 @@ const App = () => {
             className="fixed top-10 right-10 z-[100] p-4 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-white hover:bg-white/10 transition-all group"
             aria-label="Close details"
           >
-            <X size={24} className="group-hover:rotate-90 transition-transform duration-300" />
+            <X
+              size={24}
+              className="group-hover:rotate-90 transition-transform duration-300"
+            />
           </button>
           <ReadersRobin />
         </div>
@@ -126,7 +130,10 @@ const App = () => {
             className="fixed top-10 right-10 z-[100] p-4 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-white hover:bg-white/10 transition-all group"
             aria-label="Close details"
           >
-            <X size={24} className="group-hover:rotate-90 transition-transform duration-300" />
+            <X
+              size={24}
+              className="group-hover:rotate-90 transition-transform duration-300"
+            />
           </button>
           <Streamify />
         </div>
@@ -137,7 +144,10 @@ const App = () => {
             className="fixed top-10 right-10 z-[100] p-4 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-white hover:bg-white/10 transition-all group"
             aria-label="Close details"
           >
-            <X size={24} className="group-hover:rotate-90 transition-transform duration-300" />
+            <X
+              size={24}
+              className="group-hover:rotate-90 transition-transform duration-300"
+            />
           </button>
           <CollegeConnection />
         </div>
@@ -148,7 +158,10 @@ const App = () => {
             className="fixed top-10 right-10 z-[100] p-4 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-white hover:bg-white/10 transition-all group"
             aria-label="Close details"
           >
-            <X size={24} className="group-hover:rotate-90 transition-transform duration-300" />
+            <X
+              size={24}
+              className="group-hover:rotate-90 transition-transform duration-300"
+            />
           </button>
           <MemeLab />
         </div>
@@ -168,8 +181,14 @@ const App = () => {
 
           <header className="hero-header mt-2">
             <div className="hero-intro">
-              <CornerDownRight size={18} strokeWidth={2} className="opacity-50" />
-              <p className="hero-intro__text">Engineer who knows how to cook.</p>
+              <CornerDownRight
+                size={18}
+                strokeWidth={2}
+                className="opacity-50"
+              />
+              <p className="hero-intro__text">
+                Engineer who knows how to cook.
+              </p>
             </div>
           </header>
 
@@ -190,30 +209,11 @@ const App = () => {
           <hr className="section-divider" />
 
           <section className="snapshot-section" aria-label="Intro snapshot">
-            <div className="snapshot-section__accent" aria-hidden="true">
-              <span className="snapshot-section__arrow">
-                <CornerDownRight size={22} strokeWidth={1.6} />
-              </span>
-            </div>
-
-            <div className="snapshot-section__headline mb-16">
-              <p>
-                Hi, I&apos;m Ishant. I build clean, fast products that make
-                complexity feel simple.
-              </p>
-            </div>
-
-            <div className="snapshot-section__copy mb-16">
-              <p>
-                Full-stack developer building scalable, real-time applications with
-                React, Next.js, and Node.js, with a focus on performance, system
-                design, and AI-powered features
-              </p>
-            </div>
+            <Intro />
 
             <hr className="section-divider" />
-            <FeatureBento 
-              onOpenReadersRobin={() => setShowReadersRobin(true)} 
+            <FeatureBento
+              onOpenReadersRobin={() => setShowReadersRobin(true)}
               onOpenStreamify={() => setShowStreamify(true)}
               onOpenCollegeConnection={() => setShowCollegeConnection(true)}
               onOpenMemeLab={() => setShowMemeLab(true)}

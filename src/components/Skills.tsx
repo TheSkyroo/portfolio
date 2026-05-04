@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import gsap from "gsap";
-import { MoveRight } from "lucide-react";
+import { MoveRight, Code2, Monitor, Server, Database, Terminal } from "lucide-react";
 import clsx from "clsx";
 
 const SKILLS_DATA = [
   {
     category: "Languages",
+    icon: <Code2 />,
     skills: [
       "JavaScript (ES6+)",
       "HTML5 / CSS3",
@@ -16,10 +17,12 @@ const SKILLS_DATA = [
   },
   {
     category: "Frontend",
+    icon: <Monitor />,
     skills: ["GSAP Animations", "Tailwind CSS", "React.js", "Next.js", "Redux"],
   },
   {
     category: "Backend",
+    icon: <Server />,
     skills: [
       "Microservices",
       "JWT & Auth.js",
@@ -30,10 +33,12 @@ const SKILLS_DATA = [
   },
   {
     category: "Databases",
+    icon: <Database />,
     skills: ["Redis Caching", "PostgreSQL", "MongoDB", "Firebase", "Docker"],
   },
   {
     category: "Tools & DevOps",
+    icon: <Terminal />,
     skills: ["Git & CI/CD", "MediaPipe", "Vercel", "AWS", "Jest"],
   },
 ];
@@ -49,28 +54,30 @@ const Skills = () => {
 
   const updateCardPositions = useCallback((progress: number) => {
     const total = SKILLS_DATA.length;
-    
+    const wrappedActive = Math.round(progress % total + total) % total;
+    setActiveIndex(wrappedActive);
+
     cardsRef.current.forEach((card, i) => {
       if (!card) return;
 
       // Calculate relative position (-2.5 to 2.5 for 5 cards)
       let relPos = i - progress;
-      while (relPos > 2.5) relPos -= total;
-      while (relPos < -2.5) relPos += total;
+      while (relPos > total / 2) relPos -= total;
+      while (relPos < -total / 2) relPos += total;
 
       const absPos = Math.abs(relPos);
 
       // Positioning and styling
-      const xOffset = relPos * 120;
-      const scale = 1 - absPos * 0.15;
-      const opacity = Math.max(0, 1 - absPos * 0.45);
+      const xOffset = relPos * 140;
+      const scale = 1 - absPos * 0.18;
+      const opacity = Math.max(0, 1 - absPos * 0.5);
       const zIndex = Math.round(100 - absPos * 20);
-      const blur = absPos * 2.5;
-      const rotateY = relPos * -15;
+      const blur = absPos * 3;
+      const rotateY = relPos * -20;
 
       // Jump detection for infinite looping
       const currentX = gsap.getProperty(card, "x") as number;
-      if (Math.abs(xOffset - currentX) > 400) {
+      if (Math.abs(xOffset - currentX) > 500) {
         gsap.set(card, { x: xOffset });
       }
 
@@ -80,16 +87,13 @@ const Skills = () => {
         opacity: opacity,
         zIndex: zIndex,
         rotateY: rotateY,
-        duration: 0.5,
-        ease: "power2.out",
+        duration: 0.6,
+        ease: "power3.out",
         overwrite: "auto",
         filter: `blur(${blur}px)`,
-        pointerEvents: "none",
+        pointerEvents: i === wrappedActive ? "auto" : "none",
       });
     });
-
-    const wrappedActive = Math.round(progress % total + total) % total;
-    setActiveIndex(wrappedActive);
   }, []);
 
   const move = useCallback((direction: number) => {
@@ -99,7 +103,7 @@ const Skills = () => {
     progressRef.current += direction;
     updateCardPositions(progressRef.current);
 
-    gsap.delayedCall(0.5, () => {
+    gsap.delayedCall(0.6, () => {
       isAnimatingRef.current = false;
     });
   }, [updateCardPositions]);
@@ -149,24 +153,23 @@ const Skills = () => {
   return (
     <section
       ref={sectionRef}
-      className="skills-section relative py-32 overflow-hidden min-h-[700px] flex flex-col justify-center select-none"
+      className="skills-section relative py-32 overflow-hidden min-h-[750px] flex flex-col justify-center select-none"
       id="skills"
     >
-      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.03)_0%,transparent_70%)]" />
+      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.02)_0%,transparent_70%)]" />
 
-      <div className="text-center mb-16 px-4">
+      <div className="text-center mb-20 px-4">
         <h2 className="font-display text-5xl font-medium tracking-tighter text-white sm:text-7xl mb-6">
           <span className="text-white/40">Technical</span> Arsenal
         </h2>
         <p className="font-mono text-[0.65rem] uppercase tracking-[0.4em] text-white/20 flex items-center justify-center gap-3">
-          Wheel or drag to shuffle{" "}
-          <MoveRight size={12} className="animate-pulse" />
+          Shuffle the stack <MoveRight size={12} className="animate-pulse" />
         </p>
       </div>
 
       <div
         ref={viewportRef}
-        className="relative w-full h-[500px] flex items-center justify-center perspective-2000"
+        className="relative w-full h-[450px] flex items-center justify-center perspective-2000"
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
       >
@@ -176,23 +179,28 @@ const Skills = () => {
               key={idx}
               ref={(el) => (cardsRef.current[idx] = el)}
               className={clsx(
-                "absolute w-[80vw] sm:w-[42vw] p-12 sm:p-16 rounded-[3rem] border border-white/10 bg-zinc-950/80 backdrop-blur-2xl transition-shadow duration-500 shadow-2xl",
+                "absolute w-[85vw] sm:w-[400px] p-10 sm:p-12 rounded-[2.5rem] border border-white/10 bg-zinc-950/90 backdrop-blur-xl transition-shadow duration-500 shadow-2xl flex flex-col items-center",
                 idx === activeIndex ? "border-white/20" : "",
               )}
               style={{ transformStyle: "preserve-3d" }}
             >
-              <h3 className="font-mono text-xs uppercase tracking-[0.5em] text-white/30 mb-12 text-center">
+              <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mb-8">
+                <div className="text-white/40 scale-[1.4]">
+                  {item.icon}
+                </div>
+              </div>
+
+              <h3 className="font-mono text-[0.6rem] uppercase tracking-[0.4em] text-white/30 mb-8 text-center">
                 {item.category}
               </h3>
 
-              <ul className="space-y-6 flex flex-col items-center">
+              <ul className="space-y-4 flex flex-col items-center">
                 {item.skills.map((skill, sIdx) => (
                   <li
                     key={sIdx}
-                    className="flex items-center justify-center gap-4 text-white/80 group/item"
+                    className="flex items-center justify-center gap-3 text-white/80 group/item"
                   >
-                    <span className="w-2 h-2 rounded-full bg-white/20 group-hover/item:bg-white/60 transition-colors" />
-                    <span className="text-2xl sm:text-3xl font-sans tracking-tighter leading-none group-hover/item:text-white transition-colors">
+                    <span className="text-xl sm:text-2xl font-sans tracking-tight leading-none group-hover/item:text-white transition-colors">
                       {skill}
                     </span>
                   </li>
@@ -207,3 +215,4 @@ const Skills = () => {
 };
 
 export default Skills;
+
