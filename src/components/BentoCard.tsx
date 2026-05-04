@@ -168,33 +168,32 @@ const BentoCard = ({
       ease: "power3.out",
     });
 
-    const handleMouseMove = (e: MouseEvent) => {
+    const getClampedPos = (clientX: number, clientY: number) => {
       const rect = card.getBoundingClientRect();
       const { width, height } = rect;
       
-      // Calculate position relative to card
-      let x = e.clientX - rect.left;
-      let y = e.clientY - rect.top;
+      let x = clientX - rect.left + 14; // Add offset
+      let y = clientY - rect.top + 14;
 
-      // Add a slight offset so it doesn't overlap the pointer
-      const offset = 14;
-      x += offset;
-      y += offset;
-
-      // Constrain within boundaries
       const btnRect = button.getBoundingClientRect();
       const halfWidth = btnRect.width / 2;
       const halfHeight = btnRect.height / 2;
 
-      // Clamp x and y to keep button inside
-      x = Math.max(halfWidth, Math.min(width - halfWidth, x));
-      y = Math.max(halfHeight, Math.min(height - halfHeight, y));
+      return {
+        x: Math.max(halfWidth, Math.min(width - halfWidth, x)),
+        y: Math.max(halfHeight, Math.min(height - halfHeight, y)),
+      };
+    };
 
+    const handleMouseMove = (e: MouseEvent) => {
+      const { x, y } = getClampedPos(e.clientX, e.clientY);
       xTo(x);
       yTo(y);
     };
 
-    const handleMouseEnter = () => {
+    const handleMouseEnter = (e: MouseEvent) => {
+      const { x, y } = getClampedPos(e.clientX, e.clientY);
+      gsap.set(button, { x, y }); // Instantly teleport to entry point
       opacityTo(1);
       card.addEventListener("mousemove", handleMouseMove);
     };
