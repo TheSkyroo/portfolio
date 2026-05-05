@@ -3,11 +3,15 @@ import { CornerDownRight } from "lucide-react";
 import Iam from "./Iam";
 
 const IAM_QUOTES = [
-  "Ishant Sinha",
-  "Vengeance",
-  "The Night",
-  "Batman",
-  "The Developer",
+  "I'm Vengeance",
+  "I'm The Night",
+  "I'm Batman",
+  "I'm bold",
+  "I'm eager",
+  "I'm an animal, hyena",
+  "I am inevitable",
+  "I am the one who knocks",
+  "I am the algorithm",
 ];
 
 const Intro = () => {

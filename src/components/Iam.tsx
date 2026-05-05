@@ -118,19 +118,15 @@ const Iam = ({ words, containerRef }: IamProps) => {
       </div>
 
       {/* Bottom Text Section */}
-      <div className="flex flex-col px-6 py-5 text-[#f2ede5]">
-        <div className="flex flex-col gap-1">
+      <div className="flex flex-col items-center px-6 py-5 text-center text-[#f2ede5]">
+        <div className="flex flex-col items-center gap-1">
           <span className="text-[8px] font-bold uppercase tracking-[0.2em] text-white/30">
             Full Stack Developer
           </span>
-          <div className="flex items-baseline gap-1.5">
-            <span className="font-display text-xl font-medium italic leading-tight tracking-tight text-white/90 pr-1">
-              I am
-            </span>
-            {""}
+          <div className="flex items-center justify-center">
             <span
               ref={textRef}
-              className="font-display truncate text-xl font-medium italic leading-tight tracking-tight text-white/90"
+              className="font-display text-xl font-medium italic leading-tight tracking-tight text-white/90 px-1"
             >
               {words[currentIndex]}
             </span>
