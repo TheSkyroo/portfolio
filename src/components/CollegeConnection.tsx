@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { ArrowUpRight, BookOpen, Code, Database, FileText, Globe, Layers, Layout, Link2, Share2, Users } from "lucide-react";
+import { ArrowUpRight, Code, Database, FileText, Globe, Layers, Layout, Link2, Share2, Users } from "lucide-react";
 import PhilosophySection from "./PhilosophySection";
 
 const CollegeConnection = () => {

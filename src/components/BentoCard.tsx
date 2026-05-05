@@ -10,7 +10,6 @@ interface BentoCardProps {
   src: string;
   title: ReactNode;
   description: string;
-  isComingSoon?: boolean;
   posterSrc?: string;
   eyebrow?: string;
   variant?: BentoCardVariant;
@@ -18,7 +17,6 @@ interface BentoCardProps {
   className?: string;
   children?: ReactNode;
   onButtonClick?: () => void;
-  buttonLabel?: string;
   onMouseEnter?: () => void;
   onMouseLeave?: () => void;
 }
@@ -27,7 +25,6 @@ const BentoCard = ({
   src,
   title,
   description,
-  isComingSoon = false,
   posterSrc,
   eyebrow,
   variant = "media",
@@ -35,7 +32,6 @@ const BentoCard = ({
   className,
   children,
   onButtonClick,
-  buttonLabel,
   onMouseEnter,
   onMouseLeave,
 }: BentoCardProps) => {

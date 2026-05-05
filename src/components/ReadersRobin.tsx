@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { ArrowUpRight, Book, Code, Cpu, Database, Globe, Layers, Layout, Server, Share2, Sparkles, UserCheck } from "lucide-react";
+import { ArrowUpRight, Book, Cpu, Database, Globe, Layout, Server, Share2, Sparkles, UserCheck } from "lucide-react";
 import PhilosophySection from "./PhilosophySection";
 
 const ReadersRobin = () => {

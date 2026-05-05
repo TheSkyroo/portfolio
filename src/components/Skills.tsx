@@ -177,7 +177,9 @@ const Skills = () => {
           {SKILLS_DATA.map((item, idx) => (
             <div
               key={idx}
-              ref={(el) => (cardsRef.current[idx] = el)}
+              ref={(el) => {
+                cardsRef.current[idx] = el;
+              }}
               className={clsx(
                 "absolute w-[85vw] sm:w-[400px] p-10 sm:p-12 rounded-[2.5rem] border border-white/10 bg-zinc-950/90 backdrop-blur-xl transition-shadow duration-500 shadow-2xl flex flex-col items-center",
                 idx === activeIndex ? "border-white/20" : "",

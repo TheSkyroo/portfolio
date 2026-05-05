@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { ArrowUpRight, Camera, Code, Cpu, Eye, Hand, Layers, Layout, Monitor, Sparkles, User } from "lucide-react";
+import { ArrowUpRight, Camera, Code, Cpu, Hand, Layers, Layout, Monitor, Sparkles, User } from "lucide-react";
 import PhilosophySection from "./PhilosophySection";
 
 const MemeLab = () => {

@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState, useCallback, ReactNode } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
+import type { ReactNode } from "react";
 import gsap from "gsap";
 import { MoveRight } from "lucide-react";
 import clsx from "clsx";
@@ -144,7 +145,9 @@ const PhilosophySection = ({ title, items }: PhilosophySectionProps) => {
           {items.map((item, idx) => (
             <div
               key={idx}
-              ref={(el) => (cardsRef.current[idx] = el)}
+              ref={(el) => {
+                cardsRef.current[idx] = el;
+              }}
               className={clsx(
                 "absolute w-[85vw] sm:w-[350px] p-10 rounded-[2.5rem] border border-white/10 bg-zinc-950/90 backdrop-blur-xl transition-shadow duration-500 shadow-2xl flex flex-col items-center justify-center text-center",
                 idx === activeIndex ? "border-white/20" : "",

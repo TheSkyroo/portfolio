@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { ArrowUpRight, Code, Cpu, Globe, Layers, Layout, MessageSquare, Palette, ShieldCheck, Video, Zap } from "lucide-react";
+import { ArrowUpRight, Cpu, Globe, Layout, MessageSquare, Palette, ShieldCheck, Video, Zap } from "lucide-react";
 import PhilosophySection from "./PhilosophySection";
 
 const Streamify = () => {

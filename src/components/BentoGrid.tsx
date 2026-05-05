@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { ArrowUpRight } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import BentoCard from "./BentoCard";
@@ -106,7 +105,6 @@ const BentoGrid = ({
               description="Reader's Robin is an AI-enhanced social reading ecosystem that turns passive reading into an interactive journey. Featuring a SambaNova-powered literary companion, federated book discovery across multiple APIs, and a sleek, GSAP-powered interface, it provides a seamless full-stack experience for tracking progress, discovering similar readers, and mastering complex vocabulary in real-time."
               eyebrow="Social Reading Platform"
               variant="text"
-              buttonLabel="Details"
               onButtonClick={onOpenReadersRobin}
               onMouseEnter={() =>
                 setHoveredInfo({
@@ -125,7 +123,6 @@ const BentoGrid = ({
               description=" A high-performance communication engine facilitating HD video calls and sub-second latency messaging. Engineered with React 19 and the Stream SDK, it features a robust multi-step onboarding flow and dynamic theme engine, showcasing the intersection of production-ready scalability and premium UI/UX."
               eyebrow="Realtime Chat & Video Calls"
               variant="text"
-              buttonLabel="Details"
               onButtonClick={onOpenStreamify}
               onMouseEnter={() =>
                 setHoveredInfo({ label: "Details", onClick: onOpenStreamify })
@@ -141,7 +138,6 @@ const BentoGrid = ({
               description="College Connection is a web application designed to help college students connect with each other. It allows students to create profiles, view others' profiles, and reach out through social media links. Additionally, it provides a centralized space to access and share academic notes for all semesters."
               eyebrow="Academic Network"
               variant="text"
-              buttonLabel="Details"
               onButtonClick={onOpenCollegeConnection}
               onMouseEnter={() =>
                 setHoveredInfo({
@@ -160,7 +156,6 @@ const BentoGrid = ({
               description="A gesture-based reaction board powered by computer vision. Your physical expressions are the controller, triggering iconic memes through real-time landmark tracking."
               eyebrow="AI Memes"
               variant="full"
-              buttonLabel="Details"
               onButtonClick={onOpenMemeLab}
               onMouseEnter={() =>
                 setHoveredInfo({ label: "Details", onClick: onOpenMemeLab })
