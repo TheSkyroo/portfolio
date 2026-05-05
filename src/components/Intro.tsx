@@ -3,16 +3,11 @@ import { CornerDownRight } from "lucide-react";
 import Iam from "./Iam";
 
 const IAM_QUOTES = [
-  "I am the danger.",
-  "I am Batman.",
-  "I am vengeance",
-  "I am inevitable.",
-  "I am the one who knocks.",
-  "I am the algorithm.",
-  "I am Thor, son of Odin!",
-  "I am Light Yagami…",
-  "I am Monkey D. Luffy!",
-  "I am Kratos.",
+  "Ishant Sinha",
+  "Vengeance",
+  "The Night",
+  "Batman",
+  "The Developer",
 ];
 
 const Intro = () => {

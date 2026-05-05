@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
+import IshantImg from "../assets/Ishnat.png";
 
 interface IamProps {
   words: string[];
@@ -14,29 +15,28 @@ const Iam = ({ words, containerRef }: IamProps) => {
   // 1. Smooth GSAP Text Cycler (Slide + Fade)
   useEffect(() => {
     if (!words.length) return;
-    
+
     const interval = setInterval(() => {
       const tl = gsap.timeline();
-      
+
       tl.to(textRef.current, {
         opacity: 0,
-        y: -10,
+        x: -10,
         duration: 0.3,
         ease: "power2.in",
         onComplete: () => {
           setCurrentIndex((prev) => (prev + 1) % words.length);
-          gsap.set(textRef.current, { y: 10 });
-        }
-      });
-      
-      tl.to(textRef.current, {
-        opacity: 1,
-        y: 0,
-        duration: 0.4,
-        ease: "power2.out"
+          gsap.set(textRef.current, { x: 10 });
+        },
       });
 
-    }, 1000);
+      tl.to(textRef.current, {
+        opacity: 1,
+        x: 0,
+        duration: 0.4,
+        ease: "power2.out",
+      });
+    }, 2500);
 
     return () => clearInterval(interval);
   }, [words]);
@@ -47,18 +47,22 @@ const Iam = ({ words, containerRef }: IamProps) => {
     const button = buttonRef.current;
     if (!container || !button) return;
 
-    // Quick setters for performance
     const xTo = gsap.quickTo(button, "x", { duration: 0.6, ease: "power3" });
     const yTo = gsap.quickTo(button, "y", { duration: 0.6, ease: "power3" });
-    const opacityTo = gsap.quickTo(button, "opacity", { duration: 0.4, ease: "power2.out" });
-    const scaleTo = gsap.quickTo(button, "scale", { duration: 0.4, ease: "power3.out" });
+    const opacityTo = gsap.quickTo(button, "opacity", {
+      duration: 0.4,
+      ease: "power2.out",
+    });
+    const scaleTo = gsap.quickTo(button, "scale", {
+      duration: 0.4,
+      ease: "power3.out",
+    });
 
     const getClampedPos = (clientX: number, clientY: number) => {
       const rect = container.getBoundingClientRect();
       const x = clientX - rect.left;
       const y = clientY - rect.top;
 
-      // Ensure button stays within the container boundaries
       const btnRect = button.getBoundingClientRect();
       const hw = btnRect.width / 2;
       const hh = btnRect.height / 2;
@@ -66,14 +70,17 @@ const Iam = ({ words, containerRef }: IamProps) => {
       return {
         x: Math.max(hw, Math.min(rect.width - hw, x)),
         y: Math.max(hh, Math.min(rect.height - hh, y)),
-        isInside: clientX >= rect.left && clientX <= rect.right && 
-                  clientY >= rect.top && clientY <= rect.bottom
+        isInside:
+          clientX >= rect.left &&
+          clientX <= rect.right &&
+          clientY >= rect.top &&
+          clientY <= rect.bottom,
       };
     };
 
     const handleMouseMove = (e: MouseEvent) => {
       const { x, y, isInside } = getClampedPos(e.clientX, e.clientY);
-      
+
       if (isInside) {
         xTo(x);
         yTo(y);
@@ -85,41 +92,58 @@ const Iam = ({ words, containerRef }: IamProps) => {
       }
     };
 
-    // Use window listener for global tracking to ensure it doesn't "drop" the button
     window.addEventListener("mousemove", handleMouseMove);
-
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-    };
+    return () => window.removeEventListener("mousemove", handleMouseMove);
   }, [containerRef]);
 
   return (
     <div
       ref={buttonRef}
-      className="pointer-events-none absolute left-0 top-0 z-50 flex items-center gap-3 rounded-full border border-white/30 bg-white/10 px-7 py-3 text-base font-semibold text-white opacity-0 backdrop-blur-lg shadow-[0_8px_32px_rgba(0,0,0,0.3)] transition-[background-color,color,border-color] duration-300"
+      className="pointer-events-none absolute left-0 top-0 z-50 flex h-[350px] w-[260px] flex-col overflow-hidden rounded-[40px] border border-white/10 bg-[#121212]/90 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.6)] opacity-0 backdrop-blur-2xl"
       style={{
         transform: "translate(-50%, -50%) scale(0.8)",
         willChange: "transform, opacity",
       }}
     >
-      <span 
-        ref={textRef}
-        className="whitespace-nowrap tracking-tight inline-block"
-      >
-        {words[currentIndex]}
-      </span>
-      <svg
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="3"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M7 17L17 7M17 7H7M17 7V17" />
-      </svg>
+      {/* Top Image Section */}
+      <div className="m-4 mb-0 flex-grow overflow-hidden rounded-[32px] bg-gradient-to-br from-white/10 to-white/5 p-[1px]">
+        <div className="h-full w-full overflow-hidden rounded-[31px] bg-[#1a1a1a]">
+          <img
+            src={IshantImg}
+            alt="Ishant Sinha"
+            className="h-full w-full object-cover grayscale transition-transform duration-700 hover:scale-110"
+            style={{ mixBlendMode: "luminosity" }}
+          />
+        </div>
+      </div>
+
+      {/* Bottom Text Section */}
+      <div className="flex flex-col px-6 py-5 text-[#f2ede5]">
+        <div className="flex flex-col gap-1">
+          <span className="text-[8px] font-bold uppercase tracking-[0.2em] text-white/30">
+            Full Stack Developer
+          </span>
+          <div className="flex items-baseline gap-1.5">
+            <span className="font-display truncate text-xl font-medium italic leading-tight tracking-tight text-white/90">
+              I am
+            </span>
+            {""}
+            <span
+              ref={textRef}
+              className="font-display truncate text-xl font-medium italic leading-tight tracking-tight text-white/90"
+            >
+              {words[currentIndex]}
+            </span>
+          </div>
+        </div>
+
+        <p className="mt-4 text-[12px] leading-relaxed text-[#f2ede5]/50">
+          A builder of ideas, where code meets imagination.
+        </p>
+      </div>
+
+      {/* Decorative Scanline Effect */}
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:100%_4px] opacity-20" />
     </div>
   );
 };
