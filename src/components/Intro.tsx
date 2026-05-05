@@ -37,9 +37,11 @@ const Intro = () => {
 
         <div className="snapshot-section__headline mt-20 mb-20 ">
           <p className="font-display text-[clamp(2.5rem,5.5vw,5rem)] leading-[0.92] tracking-[-0.04em] text-[#f2ede5]">
-            Hi, I&apos;m{" "}
-            <span className="text-white/40 italic font-medium">Ishant</span>{" "}
-            Sinha! I build clean, fast products that make complexity feel{" "}
+            Hi, I&apos;m{"  "}
+            <span className="text-white/40 italic font-medium">
+              Ishant Sinha
+            </span>{" "}
+            I build clean, fast products that make complexity feel{" "}
             <span className="text-white/40 italic">simple.</span>
           </p>
         </div>
