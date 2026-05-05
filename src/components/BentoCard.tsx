@@ -215,9 +215,9 @@ const BentoCard = ({
         className="pointer-events-none absolute inset-0 z-10 bg-[radial-gradient(circle_at_var(--x,50%)_var(--y,50%),rgba(255,255,255,0.12),transparent_40%)]"
       />
 
-      <div className="relative z-20 flex h-full flex-col p-8 sm:p-12">
+      <div className="relative z-20 flex h-full flex-col p-8 sm:p-12 items-center text-center sm:items-start sm:text-left">
         {eyebrow && (
-          <div className="flex items-center gap-3">
+          <div className="flex items-center justify-center sm:justify-start gap-3">
             <span
               ref={badgeRef}
               className="rounded-full border border-white/20 bg-white/10 px-4 py-1.5 font-mono text-[0.65rem] uppercase tracking-[0.2em] text-white/60 backdrop-blur-md"
