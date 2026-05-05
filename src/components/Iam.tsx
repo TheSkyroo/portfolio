@@ -124,7 +124,7 @@ const Iam = ({ words, containerRef }: IamProps) => {
             Full Stack Developer
           </span>
           <div className="flex items-baseline gap-1.5">
-            <span className="font-display truncate text-xl font-medium italic leading-tight tracking-tight text-white/90">
+            <span className="font-display text-xl font-medium italic leading-tight tracking-tight text-white/90 pr-1">
               I am
             </span>
             {""}
