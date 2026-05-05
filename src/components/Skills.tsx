@@ -153,12 +153,12 @@ const Skills = () => {
   return (
     <section
       ref={sectionRef}
-      className="skills-section relative py-32 overflow-hidden min-h-[750px] flex flex-col justify-center select-none"
+      className="skills-section  relative py-32 overflow-hidden min-h-[750px] flex flex-col justify-center select-none "
       id="skills"
     >
       <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.02)_0%,transparent_70%)]" />
 
-      <div className="text-center mb-20 px-4">
+      <div className="text-center mb-20 px-4 ">
         <h2 className="font-display text-5xl font-medium tracking-tighter text-white sm:text-7xl mb-6">
           <span className="text-white/40">Technical</span> Arsenal
         </h2>
@@ -185,9 +185,7 @@ const Skills = () => {
               style={{ transformStyle: "preserve-3d" }}
             >
               <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mb-8">
-                <div className="text-white/40 scale-[1.4]">
-                  {item.icon}
-                </div>
+                <div className="text-white/40 scale-[1.4]">{item.icon}</div>
               </div>
 
               <h3 className="font-mono text-[0.6rem] uppercase tracking-[0.4em] text-white/30 mb-8 text-center">
