@@ -822,7 +822,7 @@
   }
 
   .feature-bento {
-    grid-column: auto;
+    grid-column: 1 / -1;
   }
 }
 
@@ -935,7 +935,19 @@
 
 @media (max-width: 560px) {
   .skills-section {
-    grid-column: auto;
+    grid-column: 1 / -1;
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .feature-bento {
+    grid-column: 1 / -1;
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0;
   }
 }
 

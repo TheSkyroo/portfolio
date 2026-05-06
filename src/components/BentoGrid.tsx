@@ -85,8 +85,8 @@ const BentoGrid = ({
 
   return (
     <section
-      className="feature-bento mr:20 mb-20 px-4 sm:px-6 lg:px-8"
-      aria-label="Selected Proje cts"
+      className="feature-bento mb-20 sm:px-4 md:px-6 lg:px-8"
+      aria-label="Selected Projects"
     >
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-10 lg:mb-14">

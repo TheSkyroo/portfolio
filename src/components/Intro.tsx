@@ -29,7 +29,7 @@ const Intro = () => {
 
       <div
         ref={introRef}
-        className="relative col-span-2 grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-12 lg:gap-24 items-start cursor-none"
+        className="relative col-span-1 sm:col-span-2 grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-12 lg:gap-24 items-start cursor-none"
         data-hide-cursor="true"
       >
         <Iam words={IAM_QUOTES} containerRef={introRef} />
