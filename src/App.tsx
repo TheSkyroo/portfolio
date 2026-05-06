@@ -113,7 +113,7 @@ const App = () => {
         <div className="relative">
           <button
             onClick={() => setShowReadersRobin(false)}
-            className="fixed top-10 right-10 z-[100] p-4 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-white hover:bg-white/10 transition-all group"
+            className="fixed top-4 right-4 sm:top-10 sm:right-10 z-[100] p-3 sm:p-4 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-white hover:bg-white/10 transition-all group"
             aria-label="Close details"
           >
             <X
@@ -127,7 +127,7 @@ const App = () => {
         <div className="relative">
           <button
             onClick={() => setShowStreamify(false)}
-            className="fixed top-10 right-10 z-[100] p-4 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-white hover:bg-white/10 transition-all group"
+            className="fixed top-4 right-4 sm:top-10 sm:right-10 z-[100] p-3 sm:p-4 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-white hover:bg-white/10 transition-all group"
             aria-label="Close details"
           >
             <X
@@ -141,7 +141,7 @@ const App = () => {
         <div className="relative">
           <button
             onClick={() => setShowCollegeConnection(false)}
-            className="fixed top-10 right-10 z-[100] p-4 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-white hover:bg-white/10 transition-all group"
+            className="fixed top-4 right-4 sm:top-10 sm:right-10 z-[100] p-3 sm:p-4 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-white hover:bg-white/10 transition-all group"
             aria-label="Close details"
           >
             <X
@@ -155,7 +155,7 @@ const App = () => {
         <div className="relative">
           <button
             onClick={() => setShowMemeLab(false)}
-            className="fixed top-10 right-10 z-[100] p-4 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-white hover:bg-white/10 transition-all group"
+            className="fixed top-4 right-4 sm:top-10 sm:right-10 z-[100] p-3 sm:p-4 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-white hover:bg-white/10 transition-all group"
             aria-label="Close details"
           >
             <X

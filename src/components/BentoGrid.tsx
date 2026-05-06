@@ -90,7 +90,7 @@ const BentoGrid = ({
     >
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-10 lg:mb-14">
-          <h2 className="font-display text-5xl mt-20 mb-20 font-medium tracking-tighter text-white sm:text-5xl lg:text-6xl">
+          <h2 className="font-display text-5xl mt-10 mb-10 sm:mt-20 sm:mb-20 font-medium tracking-tighter text-white sm:text-5xl lg:text-6xl">
             <span className="text-white/40">Selected</span> Projects
           </h2>
         </div>

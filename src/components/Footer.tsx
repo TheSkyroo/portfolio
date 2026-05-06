@@ -50,7 +50,7 @@ const Footer = ({ className }: { className?: string }) => {
         rel="noopener noreferrer"
         onMouseEnter={() => setHoveredLabel("Resume")}
         onMouseLeave={() => setHoveredLabel(null)}
-        className="group flex items-center gap-2 rounded-full border border-white/10 px-5 py-2 text-sm font-medium text-white transition-all hover:bg-white/5 hover:border-white/20 mb-16 cursor-none"
+        className="group flex items-center gap-2 rounded-full border border-white/10 px-4 py-2 sm:px-5 text-sm font-medium text-white transition-all hover:bg-white/5 hover:border-white/20 mb-16 cursor-none"
       >
         View Resume
         <ArrowUpRight
@@ -62,7 +62,7 @@ const Footer = ({ className }: { className?: string }) => {
 
       <div className="w-full overflow-hidden text-center">
         <h2 
-          className="font-display mb-6 text-[clamp(2.5rem,10vw,8rem)] leading-none text-white/90 selection:bg-white/20"
+          className="font-display mb-6 text-[clamp(2.5rem,10vw,8rem)] leading-none text-white/90 selection:bg-white/20 break-all"
         >
           ishaant69@gmail.com
         </h2>
@@ -78,7 +78,7 @@ const Footer = ({ className }: { className?: string }) => {
         {copied ? <Check size={14} /> : <Copy size={14} />}
       </button>
 
-      <div className="mt-16 flex flex-wrap items-center justify-center gap-4 sm:gap-6">
+      <div className="mt-10 sm:mt-16 flex flex-wrap items-center justify-center gap-3 sm:gap-4 md:gap-6">
         {[
           { name: "LinkedIn", url: "https://www.linkedin.com/in/ishant-sinha-912227292?utm_source=share_via&utm_content=profile&utm_medium=member_ios" },
           { name: "Github", url: "https://github.com/TheSkyroo" },

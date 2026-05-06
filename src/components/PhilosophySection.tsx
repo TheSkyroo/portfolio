@@ -137,7 +137,7 @@ const PhilosophySection = ({ title, items }: PhilosophySectionProps) => {
 
       <div
         ref={viewportRef}
-        className="relative w-full h-[400px] flex items-center justify-center perspective-2000"
+        className="relative w-full h-[300px] sm:h-[400px] flex items-center justify-center perspective-2000"
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
       >
@@ -149,16 +149,16 @@ const PhilosophySection = ({ title, items }: PhilosophySectionProps) => {
                 cardsRef.current[idx] = el;
               }}
               className={clsx(
-                "absolute w-[85vw] sm:w-[350px] p-10 rounded-[2.5rem] border border-white/10 bg-zinc-950/90 backdrop-blur-xl transition-shadow duration-500 shadow-2xl flex flex-col items-center justify-center text-center",
+                "absolute w-[85vw] sm:w-[350px] p-6 sm:p-10 rounded-[2rem] sm:rounded-[2.5rem] border border-white/10 bg-zinc-950/90 backdrop-blur-xl transition-shadow duration-500 shadow-2xl flex flex-col items-center justify-center text-center",
                 idx === activeIndex ? "border-white/20" : "",
               )}
               style={{ transformStyle: "preserve-3d" }}
             >
-              <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mb-8">
-                <div className="text-white/60 scale-[1.5]">{item.icon}</div>
+              <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-white/5 flex items-center justify-center mb-4 sm:mb-8">
+                <div className="text-white/60 scale-[1.2] sm:scale-[1.5]">{item.icon}</div>
               </div>
 
-              <p className="text-xl sm:text-2xl font-sans tracking-tight leading-snug text-white/90">
+              <p className="text-lg sm:text-xl md:text-2xl font-sans tracking-tight leading-snug text-white/90">
                 {item.text}
               </p>
             </div>

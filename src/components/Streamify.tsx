@@ -26,7 +26,7 @@ const Streamify = () => {
       <main className="max-w-6xl mx-auto space-y-4">
         {/* Core Concept & Architecture */}
         <section>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-8 items-start mt-1">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 items-start mt-1">
             <PhilosophySection
               title="Core Philosophy"
               items={[
@@ -103,7 +103,7 @@ const Streamify = () => {
                 href="https://streamify-pvt-1.onrender.com/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group inline-flex items-center gap-3 px-10 py-4 rounded-full border border-white/20 bg-[#f2ede5] !text-[#090909] font-semibold  transition-all hover:scale-105 active:scale-95"
+                className="group inline-flex items-center gap-2 sm:gap-3 px-6 py-3 sm:px-10 sm:py-4 rounded-full border border-white/20 bg-[#f2ede5] !text-[#090909] font-semibold text-sm sm:text-base transition-all hover:scale-105 active:scale-95"
               >
                 Visit Live Site
                 <ArrowUpRight
@@ -115,7 +115,7 @@ const Streamify = () => {
                 href="https://github.com/TheSkyroo/streamify_PVT"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group inline-flex items-center gap-3 px-10 py-4 rounded-full border border-white/20 bg-white/5 text-white font-semibold hover:bg-white/10 transition-all hover:scale-105 active:scale-95"
+                className="group inline-flex items-center gap-2 sm:gap-3 px-6 py-3 sm:px-10 sm:py-4 rounded-full border border-white/20 bg-white/5 text-white font-semibold text-sm sm:text-base hover:bg-white/10 transition-all hover:scale-105 active:scale-95"
               >
                 Source Code
                 <ArrowUpRight
