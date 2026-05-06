@@ -1,39 +1,99 @@
 import { useEffect, useRef } from "react";
+import type { ReactNode } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
+// Language icons
+import { SiJavascript, SiHtml5, SiCss, SiMysql, SiCplusplus, SiPython } from "react-icons/si";
+import { FaJava } from "react-icons/fa";
+
+// Frontend icons
+import { SiReact, SiNextdotjs, SiTailwindcss, SiVite, SiGreensock } from "react-icons/si";
+import { TbBrandFramerMotion } from "react-icons/tb";
+import { SiDaisyui } from "react-icons/si";
+
+// Backend icons
+import { SiNodedotjs, SiExpress, SiJsonwebtokens } from "react-icons/si";
+import { TbApi, TbShieldLock } from "react-icons/tb";
+import { SiAuth0 } from "react-icons/si";
+
+// Database icons
+import { SiMongodb, SiPostgresql } from "react-icons/si";
+
+// Tools & Platforms icons
+import { SiGit, SiGithub,  SiVercel, SiRender, SiJest, SiMediapipe, SiWebrtc } from "react-icons/si";
+import { FaAws } from "react-icons/fa";
+import { TbBrain, TbCode } from "react-icons/tb";
+
 gsap.registerPlugin(ScrollTrigger);
 
-const SKILLS_DATA = [
+interface SkillItem {
+  name: string;
+  icon: ReactNode;
+}
+
+interface SkillCategory {
+  category: string;
+  skills: SkillItem[];
+}
+
+const SKILLS_DATA: SkillCategory[] = [
   {
     category: "Languages",
-    skills: ["JavaScript (ES6+)", "HTML5", "CSS3", "SQL", "Java", "Python", "C++"],
+    skills: [
+      { name: "JavaScript (ES6+)", icon: <SiJavascript /> },
+      { name: "HTML5", icon: <SiHtml5 /> },
+      { name: "CSS3", icon: <SiCss /> },
+      { name: "SQL", icon: <SiMysql /> },
+      { name: "Java", icon: <FaJava /> },
+      { name: "Python", icon: <SiPython /> },
+      { name: "C++", icon: <SiCplusplus /> },
+    ],
   },
   {
     category: "Frontend",
-    skills: ["React.js", "Next.js", "Tailwind CSS", "Vite", "Zustand", "GSAP", "Daisy UI", "GSAP", "Matter.js"],
+    skills: [
+      { name: "React.js", icon: <SiReact /> },
+      { name: "Next.js", icon: <SiNextdotjs /> },
+      { name: "Tailwind CSS", icon: <SiTailwindcss /> },
+      { name: "Vite", icon: <SiVite /> },
+      { name: "Zustand", icon: <TbBrandFramerMotion /> },
+      { name: "GSAP", icon: <SiGreensock /> },
+      { name: "Daisy UI", icon: <SiDaisyui /> },
+      { name: "Matter.js", icon: <TbBrain /> },
+    ],
   },
   {
     category: "Backend",
-    skills: ["Node.js", "Express.js", "REST APIs", "JWT Auth", "Auth.js", "OAuth 2.0"],
+    skills: [
+      { name: "Node.js", icon: <SiNodedotjs /> },
+      { name: "Express.js", icon: <SiExpress /> },
+      { name: "REST APIs", icon: <TbApi /> },
+      { name: "JWT Auth", icon: <SiJsonwebtokens /> },
+      { name: "Auth.js", icon: <SiAuth0 /> },
+      { name: "OAuth 2.0", icon: <TbShieldLock /> },
+    ],
   },
   {
     category: "Databases",
-    skills: ["MongoDB", "PostgreSQL"],
+    skills: [
+      { name: "MongoDB", icon: <SiMongodb /> },
+      { name: "PostgreSQL", icon: <SiPostgresql /> },
+    ],
   },
   {
     category: "Tools & Platforms",
     skills: [
-      "Git",
-      "GitHub",
-      "AWS S3",
-      "Vercel",
-      "Render",
-      "Jest",
-      "MediaPipe",
-      "WebRTC",
-      "Sambanova",
-      "Codex",
+      { name: "Git", icon: <SiGit /> },
+      { name: "GitHub", icon: <SiGithub /> },
+      { name: "AWS S3", icon: <FaAws /> },
+      { name: "Vercel", icon: <SiVercel /> },
+      { name: "Render", icon: <SiRender /> },
+      { name: "Jest", icon: <SiJest /> },
+      { name: "MediaPipe", icon: <SiMediapipe /> },
+      { name: "WebRTC", icon: <SiWebrtc /> },
+      { name: "Sambanova", icon: <TbBrain /> },
+      { name: "Codex", icon: <TbCode /> },
     ],
   },
 ];
@@ -67,7 +127,7 @@ const Skills = () => {
   }, []);
 
   return (
-    <section ref={sectionRef} className="skills-section py-20" id="skills">
+    <section ref={sectionRef} className="skills-section py-20 px-4 sm:px-8 lg:px-16 xl:px-24" id="skills">
       <div className="mb-14 text-center">
         <h2 className="font-display text-4xl font-medium tracking-tighter text-white sm:text-5xl lg:text-6xl">
           <span className="text-white/40">Technical</span> Arsenal
@@ -86,7 +146,8 @@ const Skills = () => {
                   key={sIdx}
                   className="skill-tag"
                 >
-                  {skill}
+                  <span className="skill-tag__icon">{skill.icon}</span>
+                  {skill.name}
                 </div>
               ))}
             </div>
