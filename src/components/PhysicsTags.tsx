@@ -21,7 +21,7 @@ const TAGS: TagConfig[] = [
   //   type: "icon",
   //   icon: <ArrowDown size={57} strokeWidth={3} color="#090909" />,
   // },
-  { type: "text", label: "2+ Years Exp" },
+  { type: "text", label: "3+ Years Exp" },
   { type: "image", imageSrc: headphoneImg },
   { type: "image", imageSrc: crownImg },
   { type: "text", label: "Next.js" },
