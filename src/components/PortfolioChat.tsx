@@ -141,12 +141,12 @@ function getLocalFallbackReply(prompt: string): string {
     return "In simple terms, I build web products that people can actually use without friction. That means I handle the interface people see, the backend logic behind it, and the performance side so the whole thing feels fast and reliable.";
   }
 
-  if (normalized.includes("college connections")) {
-    return "College Connections was built as an academic networking platform, and it ended up with 500+ active users. I used Next.js, PostgreSQL, AWS S3, and Auth.js there.\n\nThe interesting part was making discovery actually useful, so I built stronger search and filtering that cut discovery time by about 45%, and role-based auth helped push engagement up too.";
+  if (normalized.includes("college connection")) {
+    return "College Connection was built as an academic networking platform, and it ended up with 500+ active users. I used Next.js, PostgreSQL, AWS S3, and Auth.js there.\n\nThe interesting part was making discovery actually useful, so I built stronger search and filtering that cut discovery time by about 45%, and role-based auth helped push engagement up too.";
   }
 
   if (normalized.includes("streamify")) {
-    return "Yeah, Streamify was one of the more backend-heavy builds for me. It's a real-time chat and video platform using React, Express, MongoDB, and Stream Chat SDK.\n\nI focused a lot on auth and performance there - JWT auth with HTTP-only cookies, solid test coverage, and API optimizations that got response times down by around 40%.";
+    return "Yeah, Streamify was one of the more backend-heavy builds for me. It's a real-time chat and video platform using React, Express, MongoDB, and Stream Chat SDK.\n\nI focused a lot on auth and performance there - JWT auth with HTTP-only cookies, 90% test coverage, and API optimizations that got response times down by around 40%.";
   }
 
   if (normalized.includes("reader") && normalized.includes("robin")) {
@@ -183,16 +183,24 @@ function getLocalFallbackReply(prompt: string): string {
     return "A few good ones: I won Hackovation 2.0 and Ideathon 2024, was runner-up at the CSVTU Hackathon, made the Top 10 in Summer of Code 2024, and I've solved 250+ DSA problems.\n\nI like that mix because it shows both execution and problem-solving, not just one side.";
   }
 
-  if (normalized.includes("experience") || normalized.includes("gdg") || normalized.includes("marketing")) {
+  if (
+    normalized.includes("experience") ||
+    normalized.includes("gdg") ||
+    normalized.includes("marketing")
+  ) {
     return "I have 2+ years of experience building on the web, and I was also the Marketing Lead at GDG GEC Bilaspur. That role was useful because it forced me to think about execution beyond code - campaigns, events, team coordination, and how to actually get people engaged.\n\nWe pushed participation up by 30% and reached 1000+ students, so it wasn't just a title thing.";
   }
 
-  if (normalized.includes("hello") || normalized.includes("hi") || normalized.includes("hey")) {
+  if (
+    normalized.includes("hello") ||
+    normalized.includes("hi") ||
+    normalized.includes("hey")
+  ) {
     return "Hey, glad you're here. Ask me about a project, my stack, or how I think about building products, and I'll keep it direct.";
   }
 
   if (normalized.includes("project")) {
-    return "I've worked on things like Reader's Robin, Streamify, and College Connections - each one taught me something different about building real products. If you want, ask me about one specific project and I'll break it down properly instead of giving you the resume version.";
+    return "I've worked on things like Reader's Robin, Streamify, and College Connection - each one taught me something different about building real products. If you want, ask me about one specific project and I'll break it down properly instead of giving you the resume version.";
   }
 
   return "Short version: I'm a full-stack developer who likes building products that feel clean, fast, and actually useful. If you want something more specific, ask me about a project, my stack, or how I work.";
@@ -360,10 +368,15 @@ const PortfolioChat = () => {
         );
       }
 
-      setMessages((current) => [...current, createMessage("assistant", data.reply as string)]);
+      setMessages((current) => [
+        ...current,
+        createMessage("assistant", data.reply as string),
+      ]);
     } catch (error) {
       const errorMessage =
-        error instanceof Error ? error.message : "Unable to send message right now.";
+        error instanceof Error
+          ? error.message
+          : "Unable to send message right now.";
 
       const isConnectionError =
         errorMessage.toLowerCase().includes("failed to fetch") ||
@@ -373,14 +386,16 @@ const PortfolioChat = () => {
 
       const fallbackReply = isConnectionError
         ? [
-            "The chat server is not reachable right now, so I'm using the local fallback.",
             wantsDetailedReply(trimmed)
               ? getLocalFallbackReply(trimmed)
               : compactReply(getLocalFallbackReply(trimmed)),
           ].join("\n\n")
         : errorMessage;
 
-      setMessages((current) => [...current, createMessage("assistant", fallbackReply)]);
+      setMessages((current) => [
+        ...current,
+        createMessage("assistant", fallbackReply),
+      ]);
     } finally {
       setIsTyping(false);
     }

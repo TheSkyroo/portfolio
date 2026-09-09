@@ -45,7 +45,7 @@ const Footer = ({ className }: { className?: string }) => {
       </p>
 
       <a
-        href="https://drive.google.com/file/d/1EHxskocqcvlWY15GOlQYolY3-gvh7EAS/view?usp=sharing"
+        href="https://drive.google.com/file/d/1vSFIc-7vgF-Krrz5p0iS6oMX-dbrg9sS/view?usp=sharing"
         target="_blank"
         rel="noopener noreferrer"
         onMouseEnter={() => setHoveredLabel("Resume")}

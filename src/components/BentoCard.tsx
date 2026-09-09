@@ -189,6 +189,7 @@ const BentoCard = ({
             />
           ) : null}
 
+          {src ? (
           <video
             ref={mediaRef}
             src={src}
@@ -200,6 +201,7 @@ const BentoCard = ({
             onError={() => setVideoFailed(true)}
             className="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100"
           />
+          ) : null}
         </div>
       ) : (
         <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-50" />

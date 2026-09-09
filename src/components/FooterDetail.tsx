@@ -164,7 +164,8 @@ const FooterDetail = ({ isVisible, containerRef }: FooterDetailProps) => {
       </div>
     </div>
   );
-};;
+};
+
 
 export default FooterDetail;
 

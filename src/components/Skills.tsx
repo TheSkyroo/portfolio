@@ -9,7 +9,7 @@ import { FaJava } from "react-icons/fa";
 
 // Frontend icons
 import { SiReact, SiNextdotjs, SiTailwindcss, SiVite, SiGreensock } from "react-icons/si";
-import { TbBrandFramerMotion } from "react-icons/tb";
+import { TbStack2 } from "react-icons/tb";
 import { SiDaisyui } from "react-icons/si";
 
 // Backend icons
@@ -57,7 +57,7 @@ const SKILLS_DATA: SkillCategory[] = [
       { name: "Next.js", icon: <SiNextdotjs /> },
       { name: "Tailwind CSS", icon: <SiTailwindcss /> },
       { name: "Vite", icon: <SiVite /> },
-      { name: "Zustand", icon: <TbBrandFramerMotion /> },
+      { name: "Zustand", icon: <TbStack2 /> },
       { name: "GSAP", icon: <SiGreensock /> },
       { name: "Daisy UI", icon: <SiDaisyui /> },
       { name: "Matter.js", icon: <TbBrain /> },

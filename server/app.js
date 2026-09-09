@@ -5,7 +5,7 @@ import { env } from "./config.js";
 import { connectToDatabase } from "./db.js";
 import { ChatSession } from "./models/ChatSession.js";
 import { systemPrompt } from "./prompts/ishantPrompt.js";
-import { generateChatReply } from "./services/sambanova.js";
+import { generateChatReply } from "./services/gemini.js";
 
 const app = express();
 const distDir = path.join(env.rootDir, "dist");
@@ -26,12 +26,33 @@ function normalizeMessages(messages) {
   }));
 }
 
+// In-memory fallback store, used when MongoDB is unreachable.
+// History lives only in server memory and is lost on restart.
+const memorySessions = new Map();
+
+function getMemorySession(sessionId) {
+  let messages = memorySessions.get(sessionId);
+  if (!messages) {
+    messages = [];
+    memorySessions.set(sessionId, messages);
+  }
+  return messages;
+}
+
+function memorySessionMessages(sessionId, messages) {
+  return messages.map((message, index) => ({
+    id: `${sessionId}-${index}`,
+    role: message.role,
+    content: message.content,
+  }));
+}
+
 app.get("/api/health", (_request, response) => {
   response.json({
     ok: true,
     mongoConfigured: Boolean(env.mongoUri),
-    sambaConfigured: Boolean(env.sambaApiKey),
-    model: env.sambaModel,
+    geminiConfigured: env.geminiApiKeys.length > 0,
+    model: env.geminiModel,
   });
 });
 
@@ -44,13 +65,20 @@ app.get(
       return;
     }
 
-    await connectToDatabase();
-    const session = await ChatSession.findOne({ sessionId }).lean();
-
-    response.json({
-      sessionId,
-      messages: session?.messages ? normalizeMessages(session.messages) : [],
-    });
+    try {
+      await connectToDatabase();
+      const session = await ChatSession.findOne({ sessionId }).lean();
+      response.json({
+        sessionId,
+        messages: session?.messages ? normalizeMessages(session.messages) : [],
+      });
+    } catch (error) {
+      console.warn(`[chat] MongoDB unavailable, serving in-memory history: ${error.message}`);
+      response.json({
+        sessionId,
+        messages: memorySessionMessages(sessionId, getMemorySession(sessionId)),
+      });
+    }
   }),
 );
 
@@ -75,17 +103,29 @@ app.post(
       return;
     }
 
-    await connectToDatabase();
-
-    let session = await ChatSession.findOne({ sessionId });
-    if (!session) {
-      session = new ChatSession({ sessionId, messages: [] });
+    // Record the incoming message. Prefer MongoDB, but fall back to an
+    // in-memory store so the chat keeps working when the DB is unreachable.
+    let dbSession = null;
+    try {
+      await connectToDatabase();
+      dbSession = await ChatSession.findOne({ sessionId });
+      if (!dbSession) {
+        dbSession = new ChatSession({ sessionId, messages: [] });
+      }
+      dbSession.messages.push({ role: "user", content: message });
+      await dbSession.save();
+    } catch (error) {
+      console.warn(`[chat] MongoDB unavailable, continuing without persistence: ${error.message}`);
+      dbSession = null;
     }
 
-    session.messages.push({ role: "user", content: message });
-    await session.save();
+    const memSession = dbSession ? null : getMemorySession(sessionId);
+    if (memSession) {
+      memSession.push({ role: "user", content: message });
+    }
 
-    const recentMessages = session.messages.slice(-12).map((entry) => ({
+    const history = dbSession ? dbSession.messages : memSession;
+    const recentMessages = history.slice(-12).map((entry) => ({
       role: entry.role,
       content: entry.content,
     }));
@@ -95,13 +135,26 @@ app.post(
       ...recentMessages,
     ]);
 
-    session.messages.push({ role: "assistant", content: reply });
-    await session.save();
+    if (dbSession) {
+      dbSession.messages.push({ role: "assistant", content: reply });
+      try {
+        await dbSession.save();
+      } catch (error) {
+        console.warn(`[chat] Failed to persist assistant reply: ${error.message}`);
+      }
+      response.json({
+        sessionId,
+        reply,
+        messages: normalizeMessages(dbSession.messages),
+      });
+      return;
+    }
 
+    memSession.push({ role: "assistant", content: reply });
     response.json({
       sessionId,
       reply,
-      messages: normalizeMessages(session.messages),
+      messages: memorySessionMessages(sessionId, memSession),
     });
   }),
 );

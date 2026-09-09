@@ -21,7 +21,7 @@ const TAGS: TagConfig[] = [
   //   type: "icon",
   //   icon: <ArrowDown size={57} strokeWidth={3} color="#090909" />,
   // },
-  { type: "text", label: "1+ Years Exp" },
+  // { type: "text", label: "1+ Years Exp" },
   { type: "image", imageSrc: headphoneImg },
   { type: "image", imageSrc: crownImg },
   { type: "text", label: "Next.js" },
@@ -333,7 +333,7 @@ const PhysicsTags = () => {
       // Move floor
       Matter.Body.setPosition(floor, {
         x: newW / 2,
-        y: newH - 2 + wallThickness / 2,
+        y: newH - 34 + wallThickness / 2,
       });
 
       // Move walls and ceiling

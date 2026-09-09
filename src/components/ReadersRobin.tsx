@@ -23,8 +23,8 @@ const ReadersRobin = () => {
           environment where users can discover new books, track their reading
           progress, and follow their favorite authors through a personalized
           recommendation engine. The platform distinguishes itself by
-          integrating AI-powered vocabulary tools via OpenAI to enhance
-          comprehension and utilizing Stream Chat for real-time social
+          integrating AI-powered vocabulary tools via SambaNova to enhance
+          comprehension and real-time messaging for social
           engagement, all wrapped in a premium, glassmorphic UI that prioritizes
           visual excellence and seamless user interaction.
         </p>

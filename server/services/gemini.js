@@ -57,32 +57,62 @@ function shortenReply(content) {
   return kept.join(" ") || flatText.slice(0, 320).trimEnd();
 }
 
+// Convert our OpenAI-style message list into Gemini's request shape.
+// System messages become `system_instruction`; assistant → "model".
+function toGeminiRequest(messages) {
+  const systemParts = [];
+  const contents = [];
+
+  for (const message of messages) {
+    if (message.role === "system") {
+      systemParts.push(message.content);
+      continue;
+    }
+
+    contents.push({
+      role: message.role === "assistant" ? "model" : "user",
+      parts: [{ text: message.content }],
+    });
+  }
+
+  const body = {
+    contents,
+    generationConfig: { temperature: 0.4 },
+  };
+
+  if (systemParts.length > 0) {
+    body.system_instruction = { parts: [{ text: systemParts.join("\n\n") }] };
+  }
+
+  return body;
+}
+
 let currentKeyIndex = 0;
 
 export async function generateChatReply(messages) {
-  const keys = env.sambaApiKeys;
+  const keys = env.geminiApiKeys;
 
   if (!keys || keys.length === 0) {
-    const error = new Error("No SambaNova API keys are configured in .env.");
+    const error = new Error("No Gemini API key is configured in .env.");
     error.statusCode = 503;
     throw error;
   }
 
+  const body = toGeminiRequest(messages);
+
   for (let attempt = 0; attempt < keys.length; attempt++) {
     const key = keys[currentKeyIndex];
 
-    const response = await fetch(`${env.sambaApiBaseUrl}/chat/completions`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${key}`,
+    const response = await fetch(
+      `${env.geminiApiBaseUrl}/models/${env.geminiModel}:generateContent?key=${key}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
       },
-      body: JSON.stringify({
-        model: env.sambaModel,
-        temperature: 0.4,
-        messages,
-      }),
-    });
+    );
 
     let payload = null;
     try {
@@ -92,16 +122,14 @@ export async function generateChatReply(messages) {
     }
 
     if (!response.ok) {
-      if (response.status === 429) {
-        // Rotate the index for the next request
+      // 429 (rate limit) and 403 (quota) → rotate to the next key if we have one.
+      if (response.status === 429 || response.status === 403) {
         currentKeyIndex = (currentKeyIndex + 1) % keys.length;
 
-        // If we still have more keys to try in this loop, continue
         if (attempt < keys.length - 1) {
           continue;
         }
 
-        // If we've tried ALL keys and all returned 429, throw the custom message
         const error = new Error(
           "Sorry, my Wi-Fi is down right now. Can we talk later? Alternatively, you can email me at ishaant69@gmail.com.",
         );
@@ -111,16 +139,26 @@ export async function generateChatReply(messages) {
 
       const error = new Error(
         payload?.error?.message ||
-          payload?.message ||
-          `SambaNova request failed with status ${response.status}.`,
+          `Gemini request failed with status ${response.status}.`,
       );
       error.statusCode = response.status;
       throw error;
     }
 
-    const content = payload?.choices?.[0]?.message?.content?.trim();
+    const content = payload?.candidates?.[0]?.content?.parts
+      ?.map((part) => part.text ?? "")
+      .join("")
+      .trim();
+
     if (!content) {
-      const error = new Error("SambaNova returned an empty reply.");
+      const blockReason =
+        payload?.promptFeedback?.blockReason ||
+        payload?.candidates?.[0]?.finishReason;
+      const error = new Error(
+        blockReason
+          ? `Gemini returned no content (${blockReason}).`
+          : "Gemini returned an empty reply.",
+      );
       error.statusCode = 502;
       throw error;
     }
