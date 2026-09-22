@@ -53,10 +53,19 @@ const Iam = ({ words, containerRef }: IamProps) => {
       duration: 0.4,
       ease: "power2.out",
     });
-    const scaleTo = gsap.quickTo(button, "scale", {
+    const scaleXTo = gsap.quickTo(button, "scaleX", {
       duration: 0.4,
       ease: "power3.out",
     });
+    const scaleYTo = gsap.quickTo(button, "scaleY", {
+      duration: 0.4,
+      ease: "power3.out",
+    });
+
+    const scaleTo = (value: number) => {
+      scaleXTo(value);
+      scaleYTo(value);
+    };
 
     const getClampedPos = (clientX: number, clientY: number) => {
       const rect = container.getBoundingClientRect();

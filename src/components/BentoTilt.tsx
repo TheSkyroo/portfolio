@@ -22,18 +22,27 @@ const BentoTilt = ({ children, className }: BentoTiltProps) => {
       transformStyle: "preserve-3d",
     });
 
-    const rotateXTo = gsap.quickTo(element, "rotateX", {
+    const rotateXTo = gsap.quickTo(element, "rotationX", {
       duration: 0.38,
       ease: "power3.out",
     });
-    const rotateYTo = gsap.quickTo(element, "rotateY", {
+    const rotateYTo = gsap.quickTo(element, "rotationY", {
       duration: 0.38,
       ease: "power3.out",
     });
-    const scaleTo = gsap.quickTo(element, "scale", {
+    const scaleXTo = gsap.quickTo(element, "scaleX", {
       duration: 0.38,
       ease: "power3.out",
     });
+    const scaleYTo = gsap.quickTo(element, "scaleY", {
+      duration: 0.38,
+      ease: "power3.out",
+    });
+
+    const scaleTo = (value: number) => {
+      scaleXTo(value);
+      scaleYTo(value);
+    };
     const yTo = gsap.quickTo(element, "y", {
       duration: 0.38,
       ease: "power3.out",

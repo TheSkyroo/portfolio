@@ -30,16 +30,16 @@ const FOOTER_WORDS = [
 const FooterDetail = ({ isVisible, containerRef }: FooterDetailProps) => {
   const detailRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLSpanElement>(null);
-  const iconRef = useRef<HTMLSpanElement>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   // 1. Text Cycler
   useEffect(() => {
     const interval = setInterval(() => {
-      if (!isVisible) return;
+      const text = textRef.current;
+      if (!isVisible || !text) return;
 
       const tl = gsap.timeline();
-      tl.to(textRef.current, {
+      tl.to(text, {
         opacity: 0,
         y: -8,
         scale: 0.95,
@@ -47,10 +47,10 @@ const FooterDetail = ({ isVisible, containerRef }: FooterDetailProps) => {
         ease: "power2.in",
         onComplete: () => {
           setCurrentIndex((prev) => (prev + 1) % FOOTER_WORDS.length);
-          gsap.set(textRef.current, { y: 8, scale: 0.95 });
+          gsap.set(text, { y: 8, scale: 0.95 });
         },
       });
-      tl.to(textRef.current, {
+      tl.to(text, {
         opacity: 1,
         y: 0,
         scale: 1,
@@ -121,12 +121,6 @@ const FooterDetail = ({ isVisible, containerRef }: FooterDetailProps) => {
         duration: 0.5,
         ease: "elastic.out(1, 0.75)",
       });
-      gsap.to(iconRef.current, {
-        scale: 1,
-        opacity: 1,
-        duration: 0.4,
-        delay: 0.1,
-      });
     } else {
       // Morph to Circle
       gsap.to(detail, {
@@ -138,7 +132,6 @@ const FooterDetail = ({ isVisible, containerRef }: FooterDetailProps) => {
         duration: 0.4,
         ease: "back.inOut(1.7)",
       });
-      gsap.to(iconRef.current, { scale: 0, opacity: 0, duration: 0.2 });
     }
   }, [isVisible]);
 

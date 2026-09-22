@@ -31,7 +31,7 @@ const TAGS: TagConfig[] = [
   // },
   { type: "text", label: "React.js" },
   { type: "text", label: "Full Stack" },
-  { type: "text", label: "GDG Marketing Lead", hasStatusDot: true },
+  { type: "text", label: "Web and App Dev @NITR", hasStatusDot: true },
 ];
 
 /* ── Helpers ────────────────────────────────────────── */

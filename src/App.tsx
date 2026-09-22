@@ -16,6 +16,11 @@ import "./App.css";
 
 const App = () => {
   const rootRef = useRef<HTMLElement>(null);
+  const introTextRef = useRef<HTMLParagraphElement>(null);
+  const resumeRef = useRef<HTMLAnchorElement>(null);
+  const heroStageRef = useRef<HTMLElement>(null);
+  const heroNameRef = useRef<HTMLHeadingElement>(null);
+  const snapshotRef = useRef<HTMLElement>(null);
   const [showReadersRobin, setShowReadersRobin] = useState(false);
   const [showStreamify, setShowStreamify] = useState(false);
   const [showCollegeConnection, setShowCollegeConnection] = useState(false);
@@ -43,31 +48,25 @@ const App = () => {
       });
 
       introTimeline
-        .from(".intro-mark", {
-          opacity: 0,
-          scale: 0.65,
-          duration: 0.7,
-        })
         .from(
-          ".hero-intro__text",
+          introTextRef.current,
           {
             opacity: 0,
             y: 28,
             duration: 0.85,
           },
-          "-=0.4",
         )
         .from(
-          ".resume-pill",
+          resumeRef.current,
           {
             opacity: 0,
             y: -18,
             duration: 0.8,
           },
-          "-=0.65",
+          "-=0.45",
         )
         .from(
-          ".physics-tags-container",
+          heroStageRef.current,
           {
             opacity: 0,
             duration: 0.6,
@@ -75,7 +74,7 @@ const App = () => {
           "-=0.3",
         )
         .from(
-          ".hero-name__text",
+          heroNameRef.current,
           {
             opacity: 0,
             yPercent: 20,
@@ -85,7 +84,7 @@ const App = () => {
           "-=0.25",
         )
         .from(
-          ".snapshot-section",
+          snapshotRef.current,
           {
             opacity: 0,
             y: 42,
@@ -173,6 +172,7 @@ const App = () => {
             href="https://drive.google.com/file/d/1vSFIc-7vgF-Krrz5p0iS6oMX-dbrg9sS/view?usp=sharing"
             target="_blank"
             rel="noopener noreferrer"
+            ref={resumeRef}
             className="floating-resume-pill"
           >
             <span className="resume-pill-view-text">View </span>Resume
@@ -186,19 +186,19 @@ const App = () => {
                 strokeWidth={2}
                 className="opacity-50"
               />
-              <p className="hero-intro__text">
+              <p ref={introTextRef} className="hero-intro__text">
                 Engineer who knows how to cook.
               </p>
             </div>
           </header>
 
           {/* Physics playground — tags fall, collide, and rest on the line above the name */}
-          <section className="hero-stage" aria-label="Highlights">
+          <section ref={heroStageRef} className="hero-stage" aria-label="Highlights">
             <PhysicsTags key={breakpointKey} />
           </section>
 
           <section className="hero-name" aria-label="Name">
-            <h1 className="hero-name__text">
+            <h1 ref={heroNameRef} className="hero-name__text">
               <span className="hero-name__code">console.log</span>
               <span className="hero-name__quotes">("</span>
               <span className="hero-name__inner">Ishant Sinha</span>
@@ -206,7 +206,7 @@ const App = () => {
             </h1>
           </section>
 
-          <section className="snapshot-section" aria-label="Intro snapshot">
+          <section ref={snapshotRef} className="snapshot-section" aria-label="Intro snapshot">
             <Intro />
 
             <FeatureBento
